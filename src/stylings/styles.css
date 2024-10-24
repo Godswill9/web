@@ -1,0 +1,368 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.signup-container {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  font-family: sans-serif;
+  font-size: 12px;
+  background: rgba(42, 0, 231, 0.137);
+}
+.signup-container .inner {
+  width: 30%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  background: rgba(1, 7, 59, 0.068);
+}
+@media (max-width: 768px) {
+  .signup-container .inner {
+    min-width: 23em;
+  }
+}
+.signup-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.signup-container .form-group {
+  margin-bottom: 15px;
+}
+.signup-container .form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+.signup-container .form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.685);
+}
+.signup-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.signup-container button:hover {
+  background-color: darkblue;
+}
+.signup-container .error {
+  color: red;
+  margin-bottom: 15px;
+}
+.signup-container .success {
+  color: green;
+  margin-bottom: 15px;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  font-family: sans-serif;
+  font-size: 14px;
+  background: rgba(42, 0, 231, 0.137);
+}
+.login-container .inner {
+  width: 30%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  background: rgba(1, 7, 59, 0.068);
+}
+@media (max-width: 768px) {
+  .login-container .inner {
+    min-width: 23em;
+  }
+}
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.login-container .form-group {
+  margin-bottom: 15px;
+}
+.login-container .form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+.login-container .form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.685);
+}
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(0, 0, 255, 0.397);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.login-container button:hover {
+  background-color: rgba(0, 0, 139, 0.582);
+}
+.login-container .error {
+  color: red;
+  margin-bottom: 15px;
+}
+.login-container .success {
+  color: green;
+  margin-bottom: 15px;
+}
+
+.dots {
+  padding: 4px;
+  border-radius: 20px;
+  display: flex;
+  width: 4.5em;
+  margin: 5px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(251, 138, 0, 0.2549019608); /* Darker shade of green */
+}
+
+.dots div {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 7px;
+  background-color: #FB8C00; /* Main theme color */
+  transition: 1s ease-in-out;
+}
+
+.goUp {
+  transform: translateY(-20%);
+}
+
+.two {
+  transform: translateY(45%);
+}
+
+.three {
+  transform: translateY(-70%);
+}
+
+.headTest {
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: #111111;
+  background: rgba(42, 0, 231, 0.137);
+  width: 100%;
+  overflow: hidden;
+}
+.container .cont_header {
+  width: 100%;
+  height: 4em;
+  position: absolute;
+  top: 0%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+@media (max-width: 636px) {
+  .container .cont_header {
+    width: 98%;
+  }
+}
+
+.innerCont {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  width: 50%;
+  height: 26.3em; /* Maintain fixed height */
+  position: absolute;
+  top: 10%;
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Centering adjustment */
+  background: rgba(255, 255, 255, 0.9); /* Light background with slight transparency */
+  border-radius: 2px; /* Rounded corners */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border for definition */
+  background: rgba(42, 0, 231, 0.137);
+  background-blend-mode: color-burn;
+  background-position-y: top;
+  font-family: sans-serif;
+  background-size: 40em;
+}
+.innerCont .popups {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%); /* Centering */
+}
+
+@media (max-width: 636px) {
+  .innerCont {
+    width: 80%; /* Full width on smaller screens */
+    max-height: 75vh; /* Maximum height to ensure it fits within the viewport */
+  }
+}
+.sender {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align to the right */
+  margin: 10px 0; /* Vertical spacing between messages */
+}
+.sender .senderInner {
+  max-width: 20em;
+  font-size: 13px;
+  font-family: sans-serif;
+  background: rgba(42, 0, 231, 0.555);
+  border: 1px solid rgba(42, 0, 231, 0.137);
+  padding: 10px; /* Inner padding */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.receiver {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align to the left */
+  margin: 10px 0; /* Vertical spacing between messages */
+}
+.receiver .receiverInner {
+  max-width: 20em;
+  font-size: 13px;
+  font-family: sans-serif;
+  background-color: #FB8C00; /* Light green background */
+  border: 1px solid #FB8C00; /* Darker green border */
+  padding: 10px; /* Inner padding */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+.receiver .receiverInner .paymentLink {
+  text-decoration: none;
+  color: rgb(214, 193, 4);
+  font-weight: bold;
+  background: #000000;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.others {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align to the left */
+  margin-top: -5px; /* Vertical spacing between messages */
+}
+.others .othersInner {
+  max-width: 20em;
+  font-size: 11px;
+  font-family: sans-serif;
+  background-color: #2e2e2e; /* Light green background */
+  padding: 10px; /* Inner padding */
+  border-radius: 8px; /* Rounded corners */
+  color: #f8f4f4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+.others .othersInner .paymentLink {
+  text-decoration: none;
+  color: #f18909;
+  font-weight: bold;
+  background: #000000;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.inputSection {
+  display: flex;
+  padding: 10px;
+  background: transparent; /* Light green background */
+  width: 50%;
+  position: absolute;
+  bottom: 2%;
+  border-radius: 8px; /* Rounded corners for the entire section */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+.inputSection input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #000000; /* Theme color for border */
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  background: rgba(12, 12, 12, 0.158);
+  transition: border 0.3s; /* Smooth transition for border color */
+}
+.inputSection input:focus {
+  outline: none; /* Remove default outline */
+}
+.inputSection button {
+  padding: 10px;
+  margin-left: 10px;
+  background: #FB8C00; /* Theme color for button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+.inputSection button:hover {
+  background: #FB8C00; /* Darker shade on hover */
+}
+.inputSection button:disabled {
+  background: #eec99c; /* Light grey for disabled state */
+}
+
+@media (max-width: 636px) {
+  .inputSection {
+    width: 80%;
+  }
+}
+.errorMessage {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 10px 0; /* Add some vertical spacing */
+  background-color: rgba(255, 1, 1, 0.1764705882); /* Light red background */
+  border: 1px solid #f80707; /* Darker red border */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(248, 248, 248, 0.062); /* Subtle shadow for depth */
+  /* Optional: Add hover effect for error messages */
+}
+.errorMessage .errorMessageInner {
+  max-width: 20em; /* Control width */
+  color: #d8000c; /* Dark red text color */
+  font-weight: bold; /* Make text bold */
+  padding: 10px; /* Inner padding */
+  border-radius: 5px; /* Rounded corners */
+  font-family: sans-serif;
+  font-size: 12px;
+}
+.errorMessage .errorMessage:hover {
+  background-color: #ffd6d6; /* Slightly darker on hover */
+  border-color: #ff1a1a; /* Darker border on hover */
+  cursor: pointer; /* Change cursor on hover */
+}/*# sourceMappingURL=styles.css.map */
