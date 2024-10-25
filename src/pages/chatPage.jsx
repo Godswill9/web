@@ -24,13 +24,14 @@ const fetchData = async () => {
     });
     const usersData = await response.json();
     console.log(usersData)
-
+   
     if (!usersData || (usersData && usersData.message === "Please log in again.")) {
      navigate("/login")
       setData(null); // Clear data if not logged in
       return;
     } else{
     setData({ users: usersData });
+    fetchMessages(usersData.id)
     }
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -42,13 +43,14 @@ useEffect(()=>{
 },[])
 
 
-  const displayOnScreen = (elem, role) => {
-    setMessages(prevMessages => [...prevMessages, { elem, role }]);
-    // console.log(messages);
-    if (innerContRef.current) {
-      innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
-    }
-  };
+  // const displayOnScreen = (elem, role) => {
+  //   console.log(elem, role)
+  //   setMessages([...messages, { elem, role }]);
+  //   console.log(messages);
+  //   if (innerContRef.current) {
+  //     innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
+  //   }
+  // };
 
   const replyMessage = async (message) => {
     setLoading(true);
@@ -73,11 +75,7 @@ useEffect(()=>{
       //   );
       // },3000)
     } catch (error) {
-      // console.error('Error:', error);
-      displayOnScreen(
-        `Ensure internet connection is on and reload`,
-        "errorMessage"
-      );
+      console.error('Error:', error);
     } finally {
       setLoading(false);
     }
@@ -86,13 +84,12 @@ useEffect(()=>{
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
-
-    displayOnScreen(inputMessage, 'sender');
     setInputMessage('');
     if (innerContRef.current) {
       innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
     }
     replyMessage(`${inputMessage}`);
+    fetchMessages(data.id)
   };
 
   const handleKeyDown = (event) => {
@@ -102,29 +99,41 @@ useEffect(()=>{
     }
   };
 
- const fetchMessages = async () => {
-  // console.log(data)
+  const fetchMessages = async (id) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL_2}/fetchAllMessages`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/fetchMessages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ myId: data.users.id, friend: "admin" }),
+        body: JSON.stringify({ myId: id, friend: "admin" }),
       });
-
+  
       if (!response.ok) throw new Error('Failed to fetch messages');
-
+  
       const data = await response.json();
-      // console.log(data.result)
       const separatedData = separateByMyId(data.result);
-      console.log(separatedData);
+  
+      // Assuming separatedData[0] is the array of messages
+      const messages = separatedData[0];
+  
+      // Sort messages based on a timestamp (adjust the key according to your data structure)
+      messages.sort((a, b) => new Date(a.timeRecieved) - new Date(b.timeRecieved));
+  // console.log(messages)
+      const newArr = messages.map(item => {
+        if (item.otherId === "admin") {
+          return { elem: item.message, role: "sender" };
+        } else {
+          return { elem: item.message, role: "receiver" };
+        }
+      });
+  // console.log(newArr)
+      setMessages(newArr);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   };
-
-  useEffect(() => {
-    fetchMessages()
-  }, []);
+  
+  
+  
 
   useEffect(() => {
     if (!firstMessageCalled.current) {
@@ -132,7 +141,6 @@ useEffect(()=>{
     }
   }, []);
 
- 
   useEffect(() => {
     if (innerContRef.current) {
       innerContRef.current.scrollTop = innerContRef.current.scrollHeight;

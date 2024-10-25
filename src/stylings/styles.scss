@@ -266,8 +266,9 @@
     align-items: center;
     justify-content: flex-end; /* Align to the right */
     margin: 10px 0; /* Vertical spacing between messages */
+    flex-wrap: wrap;
     .senderInner {
-    max-width: 20em;
+    max-width: 17em;
     font-size: 13px;
     font-family: sans-serif;
     // background-color: #ff8c00; /* Light blue background */
@@ -276,6 +277,10 @@
     border: 1px solid rgba(42, 0, 231, 0.137);
     padding: 10px; /* Inner padding */
     border-radius: 8px; /* Rounded corners */
+    height: fit-content;
+    display: inline-block;
+    word-wrap: break-word;
+    text-align: left;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
@@ -289,13 +294,17 @@
     justify-content: flex-start; /* Align to the left */
     margin: 10px 0; /* Vertical spacing between messages */
     .receiverInner {
-    max-width: 20em;
+    max-width: 17em;
     font-size: 13px;
     font-family: sans-serif;
     background-color: #FB8C00; /* Light green background */
     border: 1px solid #FB8C00; /* Darker green border */
     padding: 10px; /* Inner padding */
     border-radius: 8px; /* Rounded corners */
+    height: fit-content;
+    display: inline-block;
+    word-wrap: break-word;
+    text-align: left;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 
     .paymentLink{
