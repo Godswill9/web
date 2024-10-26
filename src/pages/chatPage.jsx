@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 // import { useAppContext } from './appContext.jsx';
 import AnimatedMessage from './AnimatedMessage'; // Import the AnimatedMessage component
 import Cookies from 'js-cookie';
+import Header from './header';
 
 
 export default function ChatPage() {
@@ -67,13 +68,6 @@ useEffect(()=>{
       const dataRes = await res.json();
       console.log(dataRes)
       setRequestCount(count => count + 1);
-      // displayOnScreen(formatStringAndWrapDivs(dataRes.data), 'receiver');
-      // setTimeout(()=>{
-      //   displayOnScreen(
-      //     `Click <a href="https://findmechanics.asoroautomotive.com/?_gl=1*z1hic2*_ga*MjA2MTUzMTU1My4xNzA3MjkxMDY1*_ga_NBETF1R9H5*MTcwNzI5MTA2NS4xLjEuMTcwNzI5MTA3MC4wLjAuMA.." class="paymentLink" target="_">Here</a> to find available mechanics`,
-      //     "others"
-      //   );
-      // },3000)
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -89,7 +83,9 @@ useEffect(()=>{
       innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
     }
     replyMessage(`${inputMessage}`);
-    fetchMessages(data.id)
+
+    console.log(data)
+    fetchMessages(data.users.id)
   };
 
   const handleKeyDown = (event) => {
@@ -117,7 +113,7 @@ useEffect(()=>{
   
       // Sort messages based on a timestamp (adjust the key according to your data structure)
       messages.sort((a, b) => new Date(a.timeRecieved) - new Date(b.timeRecieved));
-  // console.log(messages)
+  console.log(messages)
       const newArr = messages.map(item => {
         if (item.otherId === "admin") {
           return { elem: item.message, role: "sender" };
@@ -131,7 +127,6 @@ useEffect(()=>{
       console.error('Error fetching messages:', error);
     }
   };
-  
   
   
 
@@ -148,6 +143,8 @@ useEffect(()=>{
   }, []);
 
   return (
+    <>
+        <Header/>
     <div className="container">
       {/* <div className="cont_header">
         Header
@@ -182,6 +179,7 @@ useEffect(()=>{
         </button>
       </div>
     </div>
+    </>
   );
 }
 function formatStringAndWrapDivs(inputString) {

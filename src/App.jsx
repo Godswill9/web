@@ -4,6 +4,7 @@ import ChatPage from './pages/chatPage';
 import Signup from './pages/signup';
 import Verification from './pages/verification';
 import Login from './pages/login';
+import AboutUs from './pages/about';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
      <Route path={"/verification"} element={<Verification/>}></Route>
      <Route path={"/login"} element={<Login/>}></Route>
      <Route path={"/chat"} element={<ChatPage/>}></Route>
+     <Route path={"/about"} element={<AboutUs/>}></Route>
     </Routes>
     </BrowserRouter>
   </div>
