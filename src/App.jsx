@@ -12,6 +12,7 @@ function App() {
     <div>
     <BrowserRouter>
      <Routes>
+     <Route path={"/"} element={<ChatPage/>}></Route>
      <Route path={"/signup"} element={<Signup/>}></Route>
      <Route path={"/verification"} element={<Verification/>}></Route>
      <Route path={"/login"} element={<Login/>}></Route>
