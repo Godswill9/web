@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import AnimatedMessage from './AnimatedMessage'; // Import the AnimatedMessage component
 import Cookies from 'js-cookie';
 import Header from './header';
+import Loader from './loader';
 
 
 export default function ChatPage() {
@@ -18,6 +19,7 @@ export default function ChatPage() {
   const firstMessageCalled = useRef(false); // To track if the first message has been called
 
 const fetchData = async () => {
+  setLoading(true);
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/verifyAUser`, {
       method: "GET",
@@ -36,25 +38,19 @@ const fetchData = async () => {
     }
   } catch (error) {
     console.error('Error fetching data:', error);
+  }  finally {
+    setLoading(false);
   }
 };
+
 
 useEffect(()=>{
   fetchData()
 },[])
 
 
-  // const displayOnScreen = (elem, role) => {
-  //   console.log(elem, role)
-  //   setMessages([...messages, { elem, role }]);
-  //   console.log(messages);
-  //   if (innerContRef.current) {
-  //     innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
-  //   }
-  // };
-
   const replyMessage = async (message) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/sendMessage`, {
         method: 'POST',
@@ -71,7 +67,7 @@ useEffect(()=>{
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -79,6 +75,7 @@ useEffect(()=>{
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
     setInputMessage('');
+    console.log(innerContRef.current)
     if (innerContRef.current) {
       innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
     }
@@ -86,7 +83,25 @@ useEffect(()=>{
 
     console.log(data)
     fetchMessages(data.users.id)
+    sendMail(inputMessage, data.users.username)
   };
+
+  const sendMail=async (message, sender)=>{
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/sendReplyMailAdmin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message:message,
+          sender:sender
+         }),
+      });
+      const dataRes = await res.json();
+      console.log(dataRes)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -121,6 +136,31 @@ useEffect(()=>{
           return { elem: item.message, role: "receiver" };
         }
       });
+      const unreadMessages=[]
+  messages.map((item, i)=>{
+    if(item.seen_by_user !== "SEEN"){
+      unreadMessages.push(item)
+    }
+    return unreadMessages
+  })
+
+  unreadMessages.forEach(async(item, i)=>{
+    var obj = {
+      messageId:item.id,
+      userId:item.myId
+    }
+    console.log(obj)
+    const response2 =  await fetch(`${import.meta.env.VITE_API_URL}/messageSeenByUser`, {
+      method:"PUT",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj),   
+    })
+    if (!response2.ok) throw new Error('Failed to fetch messages');
+  
+    const data2 = await response2.json();
+
+    // console.log(data2)
+  })
   // console.log(newArr)
       setMessages(newArr);
     } catch (error) {
@@ -144,44 +184,46 @@ useEffect(()=>{
 
   return (
     <>
-        <Header/>
-    <div className="container">
-      {/* <div className="cont_header">
-        Header
-      </div> */}
-      <div className="innerCont" ref={innerContRef}>
-        {messages.map((msg, index) => {
-          const isError = msg.elem.includes("An error occurred");
-          const messageClass = isError ? 'errorMessage' : msg.role;
-
-          // Show AnimatedMessage if loading
-
-          return (
-            <div key={index} className={messageClass}>
-              <div className={`${messageClass}Inner`} dangerouslySetInnerHTML={{ __html: msg.elem }} />
+      <Header />
+      <div className="container">
+        <div className="innerCont" ref={innerContRef}>
+          {loading ? (
+            <Loader />
+          ) : (
+            <div>
+              {/* Add any additional content you want to show when data is loaded */}
             </div>
-          );
-        })}
-        {loading && !messages.some(msg => msg.role === 'reciever' && loading) && (
-          <AnimatedMessage role="reciever" />
-        )}
+          )}
+          {messages.map((msg, index) => {
+            const isError = msg.elem.includes("An error occurred");
+            const messageClass = isError ? 'errorMessage' : msg.role;
+
+            return (
+              <div key={index} className={messageClass}>
+                <div 
+                  className={`${messageClass}Inner`} 
+                  dangerouslySetInnerHTML={{ __html: msg.elem }} 
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="inputSection">
+          <input
+            type="text"
+            placeholder="Enter your message..."
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
+            Send
+          </button>
+        </div>
       </div>
-      <div className="inputSection">
-        <input
-          type="text"
-          placeholder="Enter your message..."
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
-          Send
-        </button>
-      </div>
-    </div>
     </>
   );
-}
+};
 function formatStringAndWrapDivs(inputString) {
   const urlPattern = /(\bhttps?:\/\/[^\s]+\.[a-z]{2,6}\b)/gi;
   const emailPattern = /[\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,6}/gi;

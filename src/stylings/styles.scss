@@ -15,7 +15,8 @@
     // border: 1px solid black;
     font-family: sans-serif;
     font-size: 12px;
-    background: rgba(42, 0, 231, 0.137);
+    background: url(../../public/gobd_img.png), rgba(7, 61, 65, 0.479);
+    background-blend-mode: darken;
     .inner{
       width:30%;
       margin: 0 auto;
@@ -23,7 +24,7 @@
       border: 1px solid #ccc;
       border-radius: 5px;
       background-color: #f9f9f9;
-      background: rgba(1, 7, 59, 0.068);
+      background: rgba(255, 255, 255, 0.479);
       @media (max-width:768px) {
         min-width: 23em
       }
@@ -53,14 +54,14 @@
     button {
       width: 100%;
       padding: 10px;
-      background-color: blue;
+      background-color: rgb(16, 77, 85);
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
   
       &:hover {
-        background-color: darkblue;
+        background-color: rgb(5, 35, 39);
       }
     }
   
@@ -87,6 +88,8 @@
     font-family: sans-serif;
     font-size: 14px;
     background: rgba(42, 0, 231, 0.137);
+    background: url(../../public/gobd_img.png), rgba(7, 61, 65, 0.479);
+    background-blend-mode: darken;
     .inner{
       width:30%;
       margin: 0 auto;
@@ -94,7 +97,7 @@
       border: 1px solid #ccc;
       border-radius: 5px;
       background-color: #f9f9f9;
-      background: rgba(1, 7, 59, 0.068);
+      background: rgba(255, 255, 255, 0.301);
       @media (max-width:768px) {
         min-width: 23em
       }
@@ -125,14 +128,14 @@
     button {
       width: 100%;
       padding: 10px;
-      background-color: rgba(0, 0, 255, 0.397);
+      background-color: rgb(16, 77, 85);
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
   
       &:hover {
-        background-color: rgba(0, 0, 139, 0.582);
+        background-color: rgb(5, 35, 39);
       }
     }
   
@@ -199,6 +202,10 @@
     width: 100%;
     overflow: hidden;
     background: linear-gradient(40deg,white, rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
+    background:rgba(184, 201, 190, 0.822);
+    background: url(../../public/gobd_img.png), rgba(7, 61, 65, 0.479);
+    background-blend-mode: darken;
+    // background-repeat: no-repeat;
     .cont_header{
         width: 100%;
         // border: 1px solid black;
@@ -233,18 +240,20 @@
     top: 17%;
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Centering adjustment */
-    background: rgba(255, 255, 255, 0.205); /* Light background with slight transparency */
+    background: rgba(0, 0, 0, 0.247); /* Light background with slight transparency */
     border-radius: 10px; /* Rounded corners */
     // box-shadow: 0 4px 10px rgba(0, 0, 0, 0.938); /* Soft shadow for depth */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border for definition */
+    // border: 1px groove rgba(0, 0, 0, 0.479); /* Subtle border for definition */
     // backdrop-filter: blur(2px); /* Optional: blurred background for modern look */
     // background: linear-gradient(rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
     background-blend-mode:color-burn;
     background-position-y: top;
     font-family: sans-serif;
     background-size: 40em;
+    overflow: auto;
     // border: 1px solid black;
     height: 70%;
+  //  background:rgba(255, 255, 255, 0.658);
   
 }
 
@@ -277,8 +286,8 @@
     font-family: sans-serif;
     // background-color: #ff8c00; /* Light blue background */
     // border: 1px solid #FB8C00; /* Darker blue border */
-    background: rgba(0, 153, 255, 0.37);
-    border: 1px solid rgba(0, 146, 231, 0.753);
+    background: rgba(97, 167, 162, 0.945);
+    border: 1px solid rgb(94, 167, 151);
     padding: 10px; /* Inner padding */
     border-radius: 8px; /* Rounded corners */
     height: fit-content;
@@ -287,7 +296,7 @@
     text-align: left;
     color: white;
     letter-spacing: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-shadow: 0 2px 5px rgba(111, 226, 178, 0.1); /* Subtle shadow */
 }
 
 }
@@ -303,7 +312,7 @@
     max-width: 17em;
     font-size: 13px;
     font-family: sans-serif;
-    background-color: #f1f1f17e; /* Light green background */
+    background-color: #f5f5f5; /* Light green background */
     border: 1px solid #eeece9; /* Darker green border */
     padding: 10px; /* Inner padding */
     border-radius: 8px; /* Rounded corners */
@@ -312,7 +321,7 @@
     word-wrap: break-word;
     text-align: left;
     letter-spacing: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    // box-shadow: 0 2px 5px rgb(255, 255, 255); /* Subtle shadow */
 
     .paymentLink{
         text-decoration: none;
@@ -442,7 +451,7 @@
 
   // Header.scss
 .header {
-  background-color: #0f3f4b6c;
+  background-color: #082730cc;
   color: white;
   padding: 1rem;
   position: fixed;
@@ -460,6 +469,13 @@
       font-weight: bold;
       display: flex;
       align-items: center;
+      img{
+        width: 2em;
+        height: 2em;
+        background: rgb(26, 25, 3);
+        border-radius: 50%;
+        padding: 2px;
+      }
       span{
         display: flex;
         margin-left: 5px;
@@ -505,6 +521,11 @@
         margin: 0;
         li {
           margin: 0 1rem;
+          // border: 1px solid black;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
           @media (max-width:476px) {
             &{
               margin: 5px;
@@ -527,6 +548,27 @@
                 font-size: 11px;
                 // display: none;
               }
+            }
+          }
+          &.chat{
+            // border: 1px solid black;
+            width: 5em;
+            span{
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width:1.7em;
+              height:1.7em;
+              padding: 4px;
+              border-radius: 50%;
+              background-color: rgb(255, 38, 0);
+              color: white;
+              margin-right: 5px;
+              font-weight: bold;
+              position: absolute;
+              top:-30%;
+              right: -30%;
+              // border: 1px solid black;
             }
           }
         }
@@ -607,4 +649,26 @@
           text-align: center;
       }
   }
+}
+
+// LoadingSpinner.scss
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // Full viewport height
+
+  .spinner {
+    width: 50px; // Width of the spinner
+    height: 50px; // Height of the spinner
+    border: 5px solid #f3f3f3; // Light background color
+    border-top: 5px solid #3498db; // Spinner color
+    border-radius: 50%; // Make it circular
+    animation: spin 1s linear infinite; // Spin animation
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
