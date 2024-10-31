@@ -15,8 +15,9 @@
     // border: 1px solid black;
     font-family: sans-serif;
     font-size: 12px;
-    background:  rgba(7, 61, 65, 0.479);
+    background:  rgba(174, 188, 189, 0.479);
     background-blend-mode: darken;
+    overflow: hidden;
     .inner{
       width:30%;
       margin: 0 auto;
@@ -88,8 +89,9 @@
     font-family: sans-serif;
     font-size: 14px;
     background: rgba(42, 0, 231, 0.137);
-    background:  rgba(7, 61, 65, 0.479);
+    background:  rgba(174, 188, 189, 0.479);
     background-blend-mode: darken;
+    overflow: hidden;
     .inner{
       width:30%;
       margin: 0 auto;
@@ -201,10 +203,11 @@
     background: rgba(42, 0, 231, 0.137);
     width: 100%;
     overflow: hidden;
-    background: linear-gradient(40deg,white, rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
-    background:rgba(184, 201, 190, 0.822);
-    background:  rgba(7, 61, 65, 0.479);
-    background-blend-mode: darken;
+    // background: linear-gradient(40deg,white, rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
+    // background:rgba(184, 201, 190, 0.822);
+    // background:  rgba(7, 61, 65, 0.479);
+    // background-blend-mode: darken;
+    background: white;
     // background-repeat: no-repeat;
     .cont_header{
         width: 100%;
@@ -240,7 +243,7 @@
     top: 17%;
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Centering adjustment */
-    background: rgba(0, 0, 0, 0.247); /* Light background with slight transparency */
+    // background: rgba(0, 0, 0, 0.247); /* Light background with slight transparency */
     border-radius: 10px; /* Rounded corners */
     // box-shadow: 0 4px 10px rgba(0, 0, 0, 0.938); /* Soft shadow for depth */
     // border: 1px groove rgba(0, 0, 0, 0.479); /* Subtle border for definition */
@@ -656,6 +659,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  z-index: 3;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.507);
   height: 100vh; // Full viewport height
 
   .spinner {
