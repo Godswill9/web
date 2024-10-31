@@ -89,9 +89,9 @@ useEffect(()=>{
     sendMail(inputMessage, data.users.username);
   
     // Reload the page after a short delay to ensure all processes complete
-    setTimeout(() => {
-      window.location.reload();
-    }, 10); // Adjust the delay as needed
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 10); // Adjust the delay as needed
   };
   
 
