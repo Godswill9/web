@@ -82,12 +82,12 @@ const Verification = () => {
       <div className="login-container">
         <div className="inner">
           <h2>Verification</h2>
-          <span>Check email for verification code</span>
+          {/* <span>Check email for verification code</span> */}
           {errorMessage && <div className="error">{errorMessage}</div>}
           {successMessage && <div className="success">{successMessage}</div>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Code:</label>
+              <label>Check your email for verification code:</label>
               <input 
                 type="code" 
                 name="code" 
