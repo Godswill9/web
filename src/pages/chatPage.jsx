@@ -71,20 +71,29 @@ useEffect(()=>{
     }
   };
 
-
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
+  
+    // Clear the input field
     setInputMessage('');
-    console.log(innerContRef.current)
+  
+    // Scroll to the bottom of the message container
     if (innerContRef.current) {
       innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
     }
     replyMessage(`${inputMessage}`);
-
-    console.log(data)
-    fetchMessages(data.users.id)
-    sendMail(inputMessage, data.users.username)
+  
+    console.log(data);
+  
+    fetchMessages(data.users.id);
+    sendMail(inputMessage, data.users.username);
+  
+    // Reload the page after a short delay to ensure all processes complete
+    setTimeout(() => {
+      window.location.reload();
+    }, 10); // Adjust the delay as needed
   };
+  
 
   const sendMail=async (message, sender)=>{
     try {
