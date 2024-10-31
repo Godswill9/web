@@ -15,7 +15,7 @@
     // border: 1px solid black;
     font-family: sans-serif;
     font-size: 12px;
-    background: url(../../public/gobd_img.png), rgba(7, 61, 65, 0.479);
+    background:  rgba(7, 61, 65, 0.479);
     background-blend-mode: darken;
     .inner{
       width:30%;
@@ -61,7 +61,7 @@
       cursor: pointer;
   
       &:hover {
-        background-color: rgb(5, 35, 39);
+      background-color: rgb(5, 35, 39);
       }
     }
   
@@ -88,7 +88,7 @@
     font-family: sans-serif;
     font-size: 14px;
     background: rgba(42, 0, 231, 0.137);
-    background: url(../../public/gobd_img.png), rgba(7, 61, 65, 0.479);
+    background:  rgba(7, 61, 65, 0.479);
     background-blend-mode: darken;
     .inner{
       width:30%;
@@ -203,7 +203,7 @@
     overflow: hidden;
     background: linear-gradient(40deg,white, rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
     background:rgba(184, 201, 190, 0.822);
-    background: url(../../public/gobd_img.png), rgba(7, 61, 65, 0.479);
+    background:  rgba(7, 61, 65, 0.479);
     background-blend-mode: darken;
     // background-repeat: no-repeat;
     .cont_header{

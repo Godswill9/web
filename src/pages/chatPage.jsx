@@ -44,7 +44,7 @@ const fetchData = async () => {
 
 useEffect(()=>{
   fetchData()
-})
+},[])
 
 
   const replyMessage = async (message) => {
