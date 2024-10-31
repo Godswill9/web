@@ -82,6 +82,7 @@ const Verification = () => {
       <div className="login-container">
         <div className="inner">
           <h2>Verification</h2>
+          <span>Check email for verification code</span>
           {errorMessage && <div className="error">{errorMessage}</div>}
           {successMessage && <div className="success">{successMessage}</div>}
           <form onSubmit={handleSubmit}>
