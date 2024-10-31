@@ -19,7 +19,7 @@ export default function ChatPage() {
   const firstMessageCalled = useRef(false); // To track if the first message has been called
 
 const fetchData = async () => {
-  setLoading(true);
+  // setLoading(true);
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/verifyAUser`, {
       method: "GET",
@@ -38,9 +38,7 @@ const fetchData = async () => {
     }
   } catch (error) {
     console.error('Error fetching data:', error);
-  }  finally {
-    setLoading(false);
-  }
+  } 
 };
 
 
@@ -196,13 +194,6 @@ useEffect(()=>{
       <Header />
       <div className="container">
         <div className="innerCont" ref={innerContRef}>
-          {loading ? (
-            <Loader />
-          ) : (
-            <div>
-              {/* Add any additional content you want to show when data is loaded */}
-            </div>
-          )}
           {messages.map((msg, index) => {
             const isError = msg.elem.includes("An error occurred");
             const messageClass = isError ? 'errorMessage' : msg.role;

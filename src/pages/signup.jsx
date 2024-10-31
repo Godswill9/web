@@ -3,6 +3,7 @@ import '../stylings/styles.css'; // Import your SCSS file
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 import { useNavigate } from 'react-router-dom';
+import Loader from './loader';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -11,6 +12,7 @@ const Signup = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const code = generateRandomString(13);
   const navigate = useNavigate();
 
@@ -36,6 +38,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const data = { username, email, password, phoneNumber, code };
 
     try {
@@ -51,6 +54,7 @@ const Signup = () => {
       const res = await response.json();
 
       if (res.status === 'success' ) {
+        setLoading(false);
         toast.success('Signup success!', {
           position: 'top-right',
           autoClose: 1000,
@@ -66,6 +70,7 @@ const Signup = () => {
         }, 1000);
       } 
       else if (res.message === 'Admin already exists' ) {
+        setLoading(false);
         toast.success('Admin already exist...proceeding to login!', {
           position: 'top-right',
           autoClose: 1000,
@@ -81,6 +86,7 @@ const Signup = () => {
         }, 1000);
       } 
       else {
+        setLoading(false);
         toast.error(res.message || 'Signup failed. Please try again.', {
           position: 'top-right',
           autoClose: 1000,
@@ -93,6 +99,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error(error);
+      setLoading(false);
       toast.error('Error during Signup!', {
         position: 'top-right',
         autoClose: 1000,
@@ -119,6 +126,13 @@ const Signup = () => {
   return (
     <>
       <ToastContainer />
+      {loading ? (
+            <Loader />
+          ) : (
+            <div>
+              {/* Add any additional content you want to show when data is loaded */}
+            </div>
+          )}
       <div className="signup-container">
         <div className="inner">
           <h2>Signup</h2>
