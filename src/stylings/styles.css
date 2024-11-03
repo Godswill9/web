@@ -143,7 +143,7 @@
   margin: 5px;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(251, 138, 0, 0.2549019608); /* Darker shade of green */
+  background-color: rgba(206, 238, 238, 0.4862745098); /* Darker shade of green */
 }
 
 .dots div {
@@ -151,7 +151,7 @@
   height: 8px;
   border-radius: 50%;
   margin: 7px;
-  background-color: #0e0d63; /* Main theme color */
+  background-color: #0d7785; /* Main theme color */
   transition: 1s ease-in-out;
 }
 
@@ -236,7 +236,6 @@
   align-items: center;
   justify-content: flex-end; /* Align to the right */
   margin: 3px 0; /* Vertical spacing between messages */
-  flex-wrap: wrap;
 }
 .sender .senderInner {
   max-width: 17em;
@@ -254,6 +253,15 @@
   color: white;
   letter-spacing: 2px;
   box-shadow: 0 2px 5px rgba(111, 226, 178, 0.1); /* Subtle shadow */
+}
+.sender .dot {
+  max-width: 17em;
+  font-size: 16px;
+  font-family: sans-serif;
+  background: white;
+  border: none;
+  padding: 0px; /* Inner padding */
+  border-radius: 0px; /* Rounded corners */
 }
 
 .receiver {
@@ -285,6 +293,15 @@
   background: #000000;
   padding: 2px;
   border-radius: 4px;
+}
+.receiver .dot {
+  max-width: 17em;
+  font-size: 16px;
+  font-family: sans-serif;
+  background: white;
+  border: none;
+  padding: 0px; /* Inner padding */
+  border-radius: 0px; /* Rounded corners */
 }
 
 .others {

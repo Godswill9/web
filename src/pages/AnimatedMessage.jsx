@@ -17,7 +17,7 @@ const AnimatedMessage = ({ role }) => {
 
   return (
     <div className={role}>
-      <div className={`${role}Inner`}>
+      <div className={`${role}Inner dot`}>
         <div className="dots">
           <div className="goUp"></div>
           <div className="two"></div>

@@ -14,6 +14,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [requestCount, setRequestCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showAnimatedMessage, setShowAnimatedMessage] = useState(false);
   const innerContRef = useRef(null);
   const navigate = useNavigate();
   const firstMessageCalled = useRef(false); // To track if the first message has been called
@@ -48,7 +49,7 @@ useEffect(()=>{
 
 
   const replyMessage = async (message) => {
-    // setLoading(true);
+    setShowAnimatedMessage(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/sendMessage`, {
         method: 'POST',
@@ -64,8 +65,6 @@ useEffect(()=>{
       setRequestCount(count => count + 1);
     } catch (error) {
       console.error('Error:', error);
-    } finally {
-      // setLoading(false);
     }
   };
 
@@ -172,6 +171,8 @@ useEffect(()=>{
       setMessages(newArr);
     } catch (error) {
       console.error('Error fetching messages:', error);
+    } finally {
+      setShowAnimatedMessage(false);
     }
   };
   
@@ -185,10 +186,13 @@ useEffect(()=>{
 
   useEffect(() => {
     if (innerContRef.current) {
-      innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
+      // Ensure scrolling happens after messages or animated message change
+      setTimeout(() => {
+        innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
+      }, 0);
     }
-  }, []);
-
+  }, [messages, showAnimatedMessage]); // Scroll when messages or the animated message changes
+  
   return (
     <>
       <Header />
@@ -207,6 +211,7 @@ useEffect(()=>{
               </div>
             );
           })}
+         {showAnimatedMessage? <AnimatedMessage role={'sender'} />: ""}
         </div>
         <div className="inputSection">
           <input
