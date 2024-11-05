@@ -61,7 +61,7 @@ useEffect(()=>{
         }),
       });
       const dataRes = await res.json();
-      console.log(dataRes)
+      // console.log(dataRes)
       setRequestCount(count => count + 1);
     } catch (error) {
       console.error('Error:', error);
@@ -80,7 +80,7 @@ useEffect(()=>{
     }
     replyMessage(`${inputMessage}`);
   
-    console.log(data);
+    // console.log(data);
   
     fetchMessages(data.users.id);
     sendMail(inputMessage, data.users.username);
@@ -116,6 +116,67 @@ useEffect(()=>{
     }
   };
 
+  // const fetchMessages = async (id) => {
+  //   try {
+  //     const response = await fetch(`${import.meta.env.VITE_API_URL}/fetchMessages`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ myId: id, friend: "admin" }),
+  //     });
+  
+  //     if (!response.ok) throw new Error('Failed to fetch messages');
+  
+  //     const data = await response.json();
+  //     const separatedData = separateByMyId(data.result);
+  
+  //     // Assuming separatedData[0] is the array of messages
+  //     const messages = separatedData[0];
+  
+  //     // Sort messages based on a timestamp (adjust the key according to your data structure)
+  //     messages.sort((a, b) => new Date(a.timeRecieved) - new Date(b.timeRecieved));
+  // console.log(messages)
+  //     const newArr = messages.map(item => {
+  //       if (item.otherId === "admin") {
+  //         return { elem: item.message, role: "sender" };
+  //       } else {
+  //         return { elem: item.message, role: "receiver" };
+  //       }
+  //     });
+  //     const unreadMessages=[]
+  // messages.map((item, i)=>{
+  //   if(item.seen_by_user !== "SEEN"){
+  //     unreadMessages.push(item)
+  //   }
+  //   return unreadMessages
+  // })
+
+  // unreadMessages.forEach(async(item, i)=>{
+  //   var obj = {
+  //     messageId:item.id,
+  //     userId:item.myId
+  //   }
+  //   console.log(obj)
+  //   const response2 =  await fetch(`${import.meta.env.VITE_API_URL}/messageSeenByUser`, {
+  //     method:"PUT",
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(obj),   
+  //   })
+  //   if (!response2.ok) throw new Error('Failed to fetch messages');
+  
+  //   const data2 = await response2.json();
+
+  //   // console.log(data2)
+  // })
+  // // console.log(newArr)
+  //     setMessages(newArr);
+  //   } catch (error) {
+  //     console.error('Error fetching messages:', error);
+  //   } finally {
+  //     setShowAnimatedMessage(false);
+  //   }
+  // };
+  
+
   const fetchMessages = async (id) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/fetchMessages`, {
@@ -134,7 +195,7 @@ useEffect(()=>{
   
       // Sort messages based on a timestamp (adjust the key according to your data structure)
       messages.sort((a, b) => new Date(a.timeRecieved) - new Date(b.timeRecieved));
-  console.log(messages)
+  
       const newArr = messages.map(item => {
         if (item.otherId === "admin") {
           return { elem: item.message, role: "sender" };
@@ -142,37 +203,45 @@ useEffect(()=>{
           return { elem: item.message, role: "receiver" };
         }
       });
-      const unreadMessages=[]
-  messages.map((item, i)=>{
-    if(item.seen_by_user !== "SEEN"){
-      unreadMessages.push(item)
-    }
-    return unreadMessages
-  })
-
-  unreadMessages.forEach(async(item, i)=>{
-    var obj = {
-      messageId:item.id,
-      userId:item.myId
-    }
-    console.log(obj)
-    const response2 =  await fetch(`${import.meta.env.VITE_API_URL}/messageSeenByUser`, {
-      method:"PUT",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(obj),   
-    })
-    if (!response2.ok) throw new Error('Failed to fetch messages');
   
-    const data2 = await response2.json();
-
-    // console.log(data2)
-  })
-  // console.log(newArr)
+      // Filter unread messages
+      const unreadMessages = messages.filter(item => item.seen_by_user !== "SEEN");
+  
+      // Async function to mark all unread messages as seen
+      const markMessagesAsSeen = async () => {
+        try {
+          // Use a loop to wait for each async operation
+          for (const item of unreadMessages) {
+            const obj = {
+              messageId: item.id,
+              userId: item.myId,
+            };
+            console.log(obj);
+  
+            const response2 = await fetch(`${import.meta.env.VITE_API_URL}/messageSeenByUser`, {
+              method: "PUT",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(obj),
+            });
+  
+            if (!response2.ok) throw new Error('Failed to update message status');
+            const data2 = await response2.json();
+            // You can log data2 if necessary
+          }
+        } catch (error) {
+          console.error('Error updating message status:', error);
+        }
+      };
+  
+      // Mark unread messages as seen before updating the messages state
+      await markMessagesAsSeen();
+  
+      // Now update the messages and hide the animated message
       setMessages(newArr);
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {
-      setShowAnimatedMessage(false);
+      setShowAnimatedMessage(false); // Hide animated message after everything is done
     }
   };
   
