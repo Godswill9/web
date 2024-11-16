@@ -6,6 +6,7 @@ import AnimatedMessage from './AnimatedMessage'; // Import the AnimatedMessage c
 import Cookies from 'js-cookie';
 import Header from './header';
 import Loader from './loader';
+import io from 'socket.io-client'; // Import socket.io-client
 
 
 export default function ChatPage() {
@@ -18,6 +19,8 @@ export default function ChatPage() {
   const innerContRef = useRef(null);
   const navigate = useNavigate();
   const firstMessageCalled = useRef(false); // To track if the first message has been called
+  const socket = useRef(null); // Reference for the socket connection
+  
 
 const fetchData = async () => {
   // setLoading(true);
@@ -43,13 +46,34 @@ const fetchData = async () => {
 };
 
 
-useEffect(()=>{
-  fetchData()
-},[])
+useEffect(() => {
+  fetchData();
+  
+  // Initialize the WebSocket connection
+  socket.current = io(`${import.meta.env.VITE_API_URL}`, { 
+    withCredentials: true,
+    transports: ['websocket', 'polling'], // Try both WebSocket and Polling
+
+  });
+
+  // Listen for incoming messages from the server
+  socket.current.on('receive_message', (newMessage) => {
+    setMessages(prevMessages => [...prevMessages, newMessage]);
+  });
+
+  // Clean up the socket connection when the component unmounts
+  return () => {
+    if (socket.current) {
+      socket.current.disconnect();
+    }
+  };
+}, []);
 
 
   const replyMessage = async (message) => {
     setShowAnimatedMessage(true);
+          // Emit the message to the WebSocket server
+          socket.current.emit('send_message', message);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/sendMessage`, {
         method: 'POST',
@@ -85,10 +109,6 @@ useEffect(()=>{
     fetchMessages(data.users.id);
     sendMail(inputMessage, data.users.username);
   
-    // Reload the page after a short delay to ensure all processes complete
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 10); // Adjust the delay as needed
   };
   
 
