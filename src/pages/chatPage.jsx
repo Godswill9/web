@@ -9,18 +9,38 @@ import Loader from './loader';
 import io from 'socket.io-client'; // Import socket.io-client
 
 
+const BouncingSpinner = () => {
+  return (
+    <div className="bouncing-spinner">
+      <div className="bounce1"></div>
+      <div className="bounce2"></div>
+      <div className="bounce3"></div>
+    </div>
+  );
+}; 
+
+
 export default function ChatPage() {
   const [data, setData]=useState({})
   const [inputMessage, setInputMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [requestCount, setRequestCount] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [showAnimatedMessage, setShowAnimatedMessage] = useState(false);
   const innerContRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const firstMessageCalled = useRef(false); // To track if the first message has been called
   const socket = useRef(null); // Reference for the socket connection
   
+
+  // Loading Indicator component
+const LoadingIndicator = ({ isLoading }) => {
+  return (
+    <div className="loading-indicator" style={{ display: isLoading ? 'flex' : 'none', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', zIndex:2 }}>
+    <BouncingSpinner />
+  </div>
+  );
+};
 
 const fetchData = async () => {
   // setLoading(true);
@@ -72,6 +92,7 @@ useEffect(() => {
 
   const replyMessage = async (message) => {
     setShowAnimatedMessage(true);
+    // setIsLoading(true)
           // Emit the message to the WebSocket server
           socket.current.emit('send_message', message);
     try {
@@ -85,14 +106,38 @@ useEffect(() => {
         }),
       });
       const dataRes = await res.json();
+      // setIsLoading(false)
       // console.log(dataRes)
       setRequestCount(count => count + 1);
     } catch (error) {
+      // setIsLoading(false)
       console.error('Error:', error);
     }
   };
 
-  const handleSendMessage = () => {
+  // const handleSendMessage = () => {
+  //   if (!inputMessage.trim()) return;
+  
+  //   // Clear the input field
+  //   setInputMessage('');
+  
+  //   // Scroll to the bottom of the message container
+  //   if (innerContRef.current) {
+  //     innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
+  //   }
+  //   replyMessage(`${inputMessage}`);
+  
+  //   // console.log(data);
+  
+  //   fetchMessages(data.users.id);
+
+  //   //removed this for the mean time...
+  //   // sendMail(inputMessage, data.users.username);
+  
+  // };
+
+
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
   
     // Clear the input field
@@ -102,14 +147,19 @@ useEffect(() => {
     if (innerContRef.current) {
       innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
     }
-    replyMessage(`${inputMessage}`);
   
-    // console.log(data);
-  
-    fetchMessages(data.users.id);
-    sendMail(inputMessage, data.users.username);
-  
+    setShowAnimatedMessage(true); // Show the loading message animation
+    try {
+      await replyMessage(`${inputMessage}`); // Send the message
+      await fetchMessages(data.users.id); // Fetch the messages after the reply
+      // await sendMail(inputMessage, data.users.username);
+    } catch (error) {
+      console.error('Error during sending or fetching messages:', error);
+    } finally {
+      setShowAnimatedMessage(false); // Hide the animated message after all is done
+    }
   };
+  
   
 
   const sendMail=async (message, sender)=>{
@@ -198,6 +248,7 @@ useEffect(() => {
   
 
   const fetchMessages = async (id) => {
+    // setIsLoading(true)
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/fetchMessages`, {
         method: 'POST',
@@ -209,6 +260,8 @@ useEffect(() => {
   
       const data = await response.json();
       const separatedData = separateByMyId(data.result);
+      console.log(data)
+      // setIsLoading(false)
   
       // Assuming separatedData[0] is the array of messages
       const messages = separatedData[0];
@@ -249,6 +302,7 @@ useEffect(() => {
             // You can log data2 if necessary
           }
         } catch (error) {
+          // setIsLoading(false)
           console.error('Error updating message status:', error);
         }
       };
@@ -286,6 +340,7 @@ useEffect(() => {
     <>
       <Header />
       <div className="container">
+      <LoadingIndicator isLoading={isLoading} />
         <div className="innerCont" ref={innerContRef}>
           {messages.map((msg, index) => {
             const isError = msg.elem.includes("An error occurred");

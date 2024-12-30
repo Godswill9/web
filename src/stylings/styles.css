@@ -181,7 +181,9 @@
   background: rgba(42, 0, 231, 0.137);
   width: 100%;
   overflow: hidden;
-  background: white;
+  background: url("../../public/image_asoroauto.webp") no-repeat center center, linear-gradient(40deg, white, rgba(7, 65, 48, 0.479), rgba(0, 231, 231, 0.212));
+  background-attachment: fixed; /* Optional: Keeps the background image fixed while scrolling */
+  background-position: center; /* Ensures the image is centered */
 }
 .container .cont_header {
   width: 100%;
@@ -212,6 +214,7 @@
   left: 50%; /* Center horizontally */
   transform: translateX(-50%); /* Centering adjustment */
   border-radius: 10px; /* Rounded corners */
+  background: linear-gradient(white, rgba(7, 65, 48, 0.205), rgba(0, 231, 231, 0.212));
   background-blend-mode: color-burn;
   background-position-y: top;
   font-family: sans-serif;
@@ -258,7 +261,7 @@
   max-width: 17em;
   font-size: 16px;
   font-family: sans-serif;
-  background: white;
+  background: inherit;
   border: none;
   padding: 0px; /* Inner padding */
   border-radius: 0px; /* Rounded corners */
@@ -359,13 +362,13 @@
 .inputSection button {
   padding: 10px;
   margin-left: 10px;
-  background: rgba(10, 101, 143, 0.4941176471); /* Theme color for button */
+  background: rgba(10, 50, 66, 0.5568627451); /* Theme color for button */
   color: white;
   border: none;
   border-radius: 4px;
 }
 .inputSection button:hover {
-  background: rgba(6, 57, 77, 0.5568627451); /* Darker shade on hover */
+  background: rgba(10, 50, 66, 0.5568627451); /* Darker shade on hover */
 }
 .inputSection button:disabled {
   background: rgba(75, 123, 163, 0.368627451); /* Light grey for disabled state */
@@ -427,7 +430,7 @@
 .header .header-content .logo img {
   width: 2em;
   height: 2em;
-  background: rgb(26, 25, 3);
+  background: rgba(26, 25, 3, 0.048);
   border-radius: 50%;
   padding: 2px;
 }
@@ -588,4 +591,37 @@
   100% {
     transform: rotate(360deg);
   }
+}
+.bouncing-spinner {
+  display: flex;
+  align-items: center;
+}
+
+.bouncing-spinner > div {
+  width: 15px;
+  height: 15px;
+  background-color: #333;
+  border-radius: 100%;
+  margin: 0 5px;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0) translateY(0);
+  }
+  50% {
+    transform: scale(1) translateY(100%);
+  }
+}
+.bounce1 {
+  animation-delay: -5s;
+}
+
+.bounce2 {
+  animation-delay: -3;
+}
+
+.bounce3 {
+  animation-delay: 1;
 }/*# sourceMappingURL=styles.css.map */

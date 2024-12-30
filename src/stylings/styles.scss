@@ -207,8 +207,13 @@
     // background:rgba(184, 201, 190, 0.822);
     // background:  rgba(7, 61, 65, 0.479);
     // background-blend-mode: darken;
-    background: white;
-    // background-repeat: no-repeat;
+    // background: white;
+    background: 
+    url("../../public/image_asoroauto.webp") no-repeat center center, 
+    linear-gradient(40deg, white, rgba(7, 65, 48, 0.479), rgba(0, 231, 231, 0.212));
+  // background-size: cover; /* Ensures the image covers the entire element */
+  background-attachment: fixed; /* Optional: Keeps the background image fixed while scrolling */
+  background-position: center; /* Ensures the image is centered */ // background-repeat: no-repeat;
     .cont_header{
         width: 100%;
         // border: 1px solid black;
@@ -248,7 +253,7 @@
     // box-shadow: 0 4px 10px rgba(0, 0, 0, 0.938); /* Soft shadow for depth */
     // border: 1px groove rgba(0, 0, 0, 0.479); /* Subtle border for definition */
     // backdrop-filter: blur(2px); /* Optional: blurred background for modern look */
-    // background: linear-gradient(rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
+    background:linear-gradient( white, rgba(7, 65, 48, 0.205), rgba(0, 231, 231, 0.212));
     background-blend-mode:color-burn;
     background-position-y: top;
     font-family: sans-serif;
@@ -305,7 +310,7 @@
   max-width: 17em;
   font-size: 16px;
   font-family: sans-serif;
-  background:white;
+  background:inherit;
   border:none ;
     padding: 0px; /* Inner padding */
     border-radius: 0px; /* Rounded corners */
@@ -419,14 +424,14 @@
     button {
       padding: 10px;
       margin-left: 10px;
-      background: #0a658f7e; /* Theme color for button */
+      background:  #0a32428e; /* Theme color for button */
       color: white;
       border: none;
       border-radius: 4px;
       // transition: background 0.3s; /* Smooth transition for background color */
       
       &:hover {
-        background: #06394d8e; /* Darker shade on hover */
+        background: #0a32428e; /* Darker shade on hover */
       }
   
       &:disabled {
@@ -494,7 +499,7 @@
       img{
         width: 2em;
         height: 2em;
-        background: rgb(26, 25, 3);
+        background: rgba(26, 25, 3, 0.048);
         border-radius: 50%;
         padding: 2px;
       }
@@ -698,3 +703,40 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+.bouncing-spinner {
+    display: flex;
+    align-items: center;
+  }
+  
+  .bouncing-spinner > div {
+    width: 15px;
+    height: 15px;
+    background-color: #333;
+    border-radius: 100%;
+    margin: 0 5px;
+    animation: bounce 2s infinite ease-in-out;
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: scale(0) translateY(0);
+    }
+    50% {
+      transform: scale(1) translateY(100%);
+    }
+  }
+  
+  .bounce1 {
+    animation-delay: -5s;
+  }
+  
+  .bounce2 {
+    animation-delay: -3;
+  }
+  
+  .bounce3 {
+    animation-delay: 1;
+  }
+  

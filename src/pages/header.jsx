@@ -77,7 +77,7 @@ const Header = () => {
     <header className="header">
       <div className="header-content">
         <div className="logo">
-            <img src="gobd_img.png" alt="" />
+            <img src="image_asoroauto.webp" alt="" />
             <span>Leave us a <span className="message">Message😉</span></span>
         </div>
         <div className="menu-icon" onClick={toggleSidebar}>
