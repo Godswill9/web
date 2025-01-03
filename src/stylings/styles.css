@@ -174,13 +174,14 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   align-items: center;
   justify-content: center;
   background: #111111;
   background: rgba(42, 0, 231, 0.137);
   width: 100%;
   overflow: hidden;
+  min-height: 100vh; /* Ensure container takes at least full viewport height */
+  height: auto;
   background: url("../../public/image_asoroauto.webp") no-repeat center center, linear-gradient(40deg, white, rgba(7, 65, 48, 0.479), rgba(0, 231, 231, 0.212));
   background-attachment: fixed; /* Optional: Keeps the background image fixed while scrolling */
   background-position: center; /* Ensures the image is centered */
@@ -207,12 +208,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 5px;
-  width: 50%;
+  width: 55%;
   height: 26.3em; /* Maintain fixed height */
-  position: absolute;
-  top: 17%;
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Centering adjustment */
   border-radius: 10px; /* Rounded corners */
   background: linear-gradient(white, rgba(7, 65, 48, 0.205), rgba(0, 231, 231, 0.212));
   background-blend-mode: color-burn;
@@ -220,7 +217,8 @@
   font-family: sans-serif;
   background-size: 40em;
   overflow: auto;
-  height: 70%;
+  max-height: 70vh;
+  margin-top: 5em;
 }
 
 @media (max-width: 636px) {
@@ -230,7 +228,7 @@
 }
 @media (max-width: 425px) {
   .innerCont {
-    width: 90%; /* Full width on smaller screens */
+    width: 95%; /* Full width on smaller screens */
   }
 }
 .sender {
@@ -239,9 +237,10 @@
   align-items: center;
   justify-content: flex-end; /* Align to the right */
   margin: 3px 0; /* Vertical spacing between messages */
+  margin-bottom: 5px;
 }
 .sender .senderInner {
-  max-width: 17em;
+  max-width: 19em;
   font-size: 13px;
   font-family: sans-serif;
   background: rgba(97, 167, 162, 0.945);
@@ -256,6 +255,39 @@
   color: white;
   letter-spacing: 2px;
   box-shadow: 0 2px 5px rgba(111, 226, 178, 0.1); /* Subtle shadow */
+}
+.sender .senderInner .sendBut {
+  width: 100%;
+  padding: 10px;
+  display: block;
+  background: rgba(3, 37, 35, 0.945);
+  border: 1px solid rgb(94, 167, 151);
+  color: white;
+}
+.sender .senderInner .files {
+  width: 17em;
+  border: 1px solid rgb(94, 167, 151);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+.sender .senderInner .files .file {
+  width: 5em;
+  height: 5em;
+  display: block;
+  border: 1px solid rgba(50, 58, 50, 0.048);
+  margin: 3px;
+  background-color: rgba(40, 80, 67, 0.5137254902);
+  border-radius: 5px;
+}
+.sender .senderInner .files .file .img {
+  width: 100%;
+  height: 100%;
+}
+.sender .senderInner .files .vid {
+  width: 100%;
+  height: 10em;
 }
 .sender .dot {
   max-width: 17em;
@@ -273,9 +305,10 @@
   align-items: center;
   justify-content: flex-start; /* Align to the left */
   margin: 3px 0; /* Vertical spacing between messages */
+  margin-bottom: 5px;
 }
 .receiver .receiverInner {
-  max-width: 17em;
+  max-width: 19em;
   font-size: 13px;
   font-family: sans-serif;
   background-color: #f5f5f5; /* Light green background */
@@ -288,6 +321,26 @@
   word-wrap: break-word;
   text-align: left;
   letter-spacing: 2px;
+}
+.receiver .receiverInner .files {
+  width: 17em;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+.receiver .receiverInner .files .file {
+  width: 5em;
+  height: 5em;
+  display: block;
+  border: 1px solid rgba(50, 58, 50, 0.048);
+  margin: 3px;
+  background-color: rgba(7, 78, 54, 0.5137254902);
+  border-radius: 5px;
+}
+.receiver .receiverInner .files .vid {
+  width: 100%;
+  height: 10em;
 }
 .receiver .receiverInner .paymentLink {
   text-decoration: none;
@@ -333,18 +386,55 @@
   border-radius: 4px;
 }
 
+.biggerPic {
+  width: 100%;
+  height: 100vh;
+  border: 1px solid rgb(255, 255, 255);
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  display: none;
+}
+.biggerPic .img {
+  width: 60%;
+  height: 22em;
+  border: 1px solid rgba(255, 255, 255, 0.281);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  position: absolute;
+}
+.biggerPic .img img {
+  width: 100%;
+  height: 100%;
+}
+.biggerPic .biggerPicWrapper {
+  width: 100%;
+  height: 100vh;
+  border: 1px solid rgb(255, 255, 255);
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  background: rgba(0, 0, 0, 0.904);
+}
+
 .inputSection {
   display: flex;
   padding: 2px;
   background: rgb(183, 170, 248); /* Light green background */
-  width: 50%;
-  position: absolute;
-  bottom: 2%;
+  width: 53%;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 8px; /* Rounded corners for the entire section */
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.418); /* Subtle shadow for depth */
-  height: 10%;
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.418); /* Subtle shadow for depth */
+  height: 4em;
   background: rgba(255, 255, 255, 0.164);
+  margin-top: 5px;
+  align-items: center;
 }
 .inputSection input {
   flex: 1;
@@ -359,6 +449,13 @@
 .inputSection input:focus {
   outline: none; /* Remove default outline */
 }
+.inputSection #images {
+  background: url("../../public/image_asoroauto.webp");
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
 .inputSection button {
   padding: 10px;
   margin-left: 10px;
@@ -366,6 +463,7 @@
   color: white;
   border: none;
   border-radius: 4px;
+  height: 4em;
 }
 .inputSection button:hover {
   background: rgba(10, 50, 66, 0.5568627451); /* Darker shade on hover */
@@ -376,7 +474,7 @@
 
 @media (max-width: 636px) {
   .inputSection {
-    width: 80%;
+    width: 95%;
   }
 }
 .errorMessage {

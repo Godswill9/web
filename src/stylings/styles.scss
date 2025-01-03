@@ -196,13 +196,14 @@
   .container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
     align-items: center;
     justify-content: center;
     background:#111111;
     background: rgba(42, 0, 231, 0.137);
     width: 100%;
     overflow: hidden;
+    min-height: 100vh; /* Ensure container takes at least full viewport height */
+height: auto;
     // background: linear-gradient(40deg,white, rgba(23, 7, 65, 0.479), rgba(42, 0, 231, 0.212));
     // background:rgba(184, 201, 190, 0.822);
     // background:  rgba(7, 61, 65, 0.479);
@@ -242,12 +243,12 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: 5px;
-    width: 50%;
+    width: 55%;
     height: 26.3em; /* Maintain fixed height */
-    position: absolute;
-    top: 17%;
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Centering adjustment */
+    // position: absolute;
+    // top: 17%;
+    // left: 50%; /* Center horizontally */
+    // transform: translateX(-50%); /* Centering adjustment */
     // background: rgba(0, 0, 0, 0.247); /* Light background with slight transparency */
     border-radius: 10px; /* Rounded corners */
     // box-shadow: 0 4px 10px rgba(0, 0, 0, 0.938); /* Soft shadow for depth */
@@ -260,7 +261,9 @@
     background-size: 40em;
     overflow: auto;
     // border: 1px solid black;
-    height: 70%;
+    // height: 70%;
+    max-height: 70vh;
+    margin-top: 5em;
   //  background:rgba(255, 255, 255, 0.658);
   
 }
@@ -274,11 +277,20 @@
 }
 @media (max-width: 425px) {
     .innerCont {
-        width: 90%; /* Full width on smaller screens */
+        width: 95%; /* Full width on smaller screens */
         // height: auto; /* Adjust height for responsiveness */
         // max-height: 75vh; /* Maximum height to ensure it fits within the viewport */
     }
 }
+
+
+// @media (min-height: 706px) {
+//     .innerCont {
+//         height: 30vh; /* Full width on smaller screens */
+//         /* height: auto;  Adjust height for responsiveness */
+//         /* max-height: 75vh;  Maximum height to ensure it fits within the viewport */
+//     }
+// }
 
   .sender {
     width: 100%;
@@ -288,8 +300,9 @@
     margin: 3px 0; /* Vertical spacing between messages */
     // flex-wrap: wrap;
     // border: 1px solid black;
+    margin-bottom: 5px;
     .senderInner {
-    max-width: 17em;
+    max-width: 19em;
     font-size: 13px;
     font-family: sans-serif;
     // background-color: #ff8c00; /* Light blue background */
@@ -305,7 +318,42 @@
     color: white;
     letter-spacing: 2px;
     box-shadow: 0 2px 5px rgba(111, 226, 178, 0.1); /* Subtle shadow */
-}
+    .sendBut{
+      width: 100%;
+      padding: 10px;
+      display: block;
+      background: rgba(3, 37, 35, 0.945);
+      border: 1px solid rgb(94, 167, 151);
+      color: white;
+    }
+    .files{
+       width: 17em;
+      // height:10em;
+      border: 1px solid rgb(94, 167, 151);
+      display: flex;
+      align-items: center;
+      // justify-content: center;
+      flex-wrap: wrap;
+      overflow: auto;
+      .file{
+        width: 5em;
+        height: 5em;
+        display: block;
+        border: 1px solid rgba(50, 58, 50, 0.048);
+        margin: 3px;
+        background-color: #28504383;
+        border-radius: 5px;
+        .img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .vid{
+        width: 100%;
+        height: 10em;
+      }
+    }
+  }
 .dot{
   max-width: 17em;
   font-size: 16px;
@@ -325,8 +373,9 @@
     align-items: center;
     justify-content: flex-start; /* Align to the left */
     margin:3px 0; /* Vertical spacing between messages */
+    margin-bottom: 5px;
     .receiverInner {
-    max-width: 17em;
+    max-width: 19em;
     font-size: 13px;
     font-family: sans-serif;
     background-color: #f5f5f5; /* Light green background */
@@ -339,6 +388,31 @@
     text-align: left;
     letter-spacing: 2px;
     // box-shadow: 0 2px 5px rgb(255, 255, 255); /* Subtle shadow */
+
+    .files{
+      width: 17em;
+     // height:10em;
+    //  border: 1px solid rgb(94, 167, 151);
+     display: flex;
+     align-items: center;
+    //  background-color: #160101;
+     // justify-content: center;
+     flex-wrap: wrap;
+     overflow: auto;
+     .file{
+       width: 5em;
+       height: 5em;
+       display: block;
+       border: 1px solid rgba(50, 58, 50, 0.048);
+       margin: 3px;
+       background-color: #074e3683;
+       border-radius: 5px;
+     }
+     .vid{
+       width: 100%;
+       height: 10em;
+     }
+   }
 
     .paymentLink{
         text-decoration: none;
@@ -390,19 +464,62 @@
 }
 }
 
+.biggerPic{
+  width: 100%;
+  height: 100vh;
+  border: 1px solid rgb(255, 255, 255);
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  // background: rgba(255, 248, 248, 0.89);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 2;
+// position: relative;
+display:none;
+  .img{
+   width: 60%;
+   height: 22em;
+   border: 1px solid rgba(255, 255, 255, 0.281);
+   display: flex;
+align-items: center;
+justify-content: center;
+// overflow: auto;
+border-radius: 20px;
+position: absolute;
+img{
+  width: 100%;
+  height:100%;
+}
+  }
+
+  .biggerPicWrapper{
+    width: 100%;
+    height: 100vh;
+    border: 1px solid rgb(255, 255, 255);
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    background: rgba(0, 0, 0, 0.904);
+  }
+  
+}
+
   .inputSection {
     display: flex;
     padding: 2px;
     background: rgb(183, 170, 248); /* Light green background */
-    width: 50%;
-    position: absolute;
-    bottom: 2%;
+    width: 53%;
+    // position: absolute;
+    // bottom: 2%;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 8px; /* Rounded corners for the entire section */
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.418); /* Subtle shadow for depth */
-    height: 10%;
+    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.418); /* Subtle shadow for depth */
+    height: 4em;
     background: rgba(255, 255, 255, 0.164);
-
+    margin-top: 5px;
+    align-items: center;
 
     input {
       flex: 1;
@@ -420,6 +537,14 @@
       }
       
     }
+
+    #images{
+      background:url("../../public/image_asoroauto.webp");
+      background-size: cover;
+      width: 24px;
+      height:24px;
+      display: inline-block;
+    }
   
     button {
       padding: 10px;
@@ -428,6 +553,7 @@
       color: white;
       border: none;
       border-radius: 4px;
+      height: 4em;
       // transition: background 0.3s; /* Smooth transition for background color */
       
       &:hover {
@@ -442,7 +568,7 @@
   
   @media (max-width:636px) {
     .inputSection{
-        width:80%
+        width:95%
     }
   }
 
@@ -739,4 +865,6 @@
   .bounce3 {
     animation-delay: 1;
   }
-  
+   
+
+

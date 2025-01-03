@@ -31,7 +31,132 @@ export default function ChatPage() {
   const navigate = useNavigate();
   const firstMessageCalled = useRef(false); // To track if the first message has been called
   const socket = useRef(null); // Reference for the socket connection
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedRawFiles, setSelectedRawFiles] = useState([]);
+  const [isVisible, setIsVisible] = useState(false); // Track visibility for transition
+
+  useEffect(() => {
+    if (selectedRawFiles.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 300); // Wait for transition to finish before setting display: none
+    }
+  }, [selectedRawFiles]);
+ 
+
+  // const handleFileChange = (event) => {
+  //   if (event.target.files) {
+  //     const files = Array.from(event.target.files);
   
+  //     // Create an array of promises to handle the base64 conversion for each file
+  //     const promises = files.map((file) => {
+  //       return new Promise((resolve) => {
+  //         setFileToBase(file, (dataURI) => {
+  //           resolve({ file, base64: dataURI });
+  //         });
+  //       });
+  //     });
+  
+  //     // Once all the promises are resolved, update the state
+  //     Promise.all(promises).then((base64Files) => {
+  //       console.log(base64Files);
+  //       setSelectedFiles(base64Files); // Update your state with the file objects and their base64 representation
+  //     });
+  //   }
+  // };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+  setSelectedRawFiles(files)
+  // console.log(files)
+    if (files.length > 10) {
+      return;
+    }else{
+const imageArray = [];
+files.forEach((file, i) => {
+  setFileToBase(file, (dataURI) => {
+    // Add the data URI to the image array
+    imageArray.push(dataURI);
+
+    // If all images have been processed, update state
+    if (imageArray.length === files.length) {
+      // console.log(imageArray)
+     setSelectedFiles(imageArray);
+    }
+  });
+});
+    }
+  };
+  
+  // Base64 conversion function for displaying images
+  const setFileToBase = (file, callback) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      const dataURI = reader.result;
+      callback(dataURI); // Call the callback with the base64 encoded string
+    };
+  };
+  
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+  
+      // Loop through selected files and append them to FormData
+      selectedFiles.forEach(( file ) => {
+        formData.append('files', file); // Only append the actual file objects here, not the base64 encoded string
+      });
+  
+      // Append additional data like senderId and receiverId
+      formData.append('senderId', data.id);
+      formData.append('receiverId', 'admin');
+  
+      // Perform the fetch request to upload files
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData, // `formData` is already in the correct format
+      });
+  
+      const result = await response.json(); // Parse the JSON response
+  
+      if (!response.ok) {
+        throw new Error(result.message || 'Upload failed');
+      }
+  
+      console.log(result); // Handle the successful response
+  
+    } catch (error) {
+      console.error('Error uploading:', error);
+      alert('Error uploading files');
+    }
+  };
+  
+
+  const renderFilePreview = (file) => {
+    const isImage = file.type.startsWith('image');
+    const isVideo = file.type.startsWith('video');
+
+    if (isImage) {
+      const imageUrl = URL.createObjectURL(file);
+      // console.log(imageUrl)
+      return <span className="file img" key={file.name}>
+        <img className="img" key={file.name} src={imageUrl} alt="thumbnail" />
+      </span>;  // Only render img span for image files
+    }
+
+    if (isVideo) {
+      const videoUrl = URL.createObjectURL(file);
+      console.log(videoUrl)
+      return <span className="file vid" key={file.name}>
+          <video className="vid" key={file.name} width="120" height="90" controls poster={videoUrl}>
+          <source src={videoUrl} type={file.type} />
+        </video>
+      </span>;  // Only render vid span for video files
+    }
+
+    return null;  // Optionally handle unsupported file types
+  };
 
   // Loading Indicator component
 const LoadingIndicator = ({ isLoading }) => {
@@ -40,6 +165,15 @@ const LoadingIndicator = ({ isLoading }) => {
     <BouncingSpinner />
   </div>
   );
+};
+
+const handleButtonClick = () => {
+  const inputRef = document.createElement('input');
+  inputRef.type = 'file';
+  inputRef.multiple = true; 
+
+  inputRef.addEventListener('change', handleFileChange);
+  inputRef.click();
 };
 
 const fetchData = async () => {
@@ -57,6 +191,7 @@ const fetchData = async () => {
       setData(null); // Clear data if not logged in
       return;
     } else{
+      console.log(usersData)
     setData({ users: usersData });
     fetchMessages(usersData.id)
     }
@@ -356,6 +491,39 @@ useEffect(() => {
             );
           })}
          {showAnimatedMessage? <AnimatedMessage role={'sender'} />: ""}
+         <div
+        className="image-preview sender"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          visibility: isVisible ? 'visible' : 'hidden',
+          display: isVisible ? 'flex' : 'none',
+          transition: 'opacity 0.3s ease, visibility 0s 0.3s', // Ensure visibility change happens after opacity
+        }}
+      >
+        <span className="senderInner">
+          <div className="files">
+            {selectedRawFiles.map((file) => renderFilePreview(file))}
+          </div>
+          <button className="sendBut" onClick={handleUpload}>Send</button>
+        </span>
+      </div>
+         <div className="image-preview receiver">
+          <span className='receiverInner'>
+            <div className="files">
+              <span className='file img'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file'></span>
+              <span className='file vid'></span>
+            </div>
+            {/* <button>Send</button> */}
+          </span>
+        </div>
         </div>
         <div className="inputSection">
           <input
@@ -365,9 +533,14 @@ useEffect(() => {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
           />
+        <button id="images" onClick={handleButtonClick}></button>
           <button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
             Send
           </button>
+        </div>
+        <div className="biggerPic">
+          <div className="biggerPicWrapper"></div>
+          <div className="img"><img src="image_asoroauto.webp" alt="" /></div>
         </div>
       </div>
     </>
