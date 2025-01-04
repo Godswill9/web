@@ -66,27 +66,84 @@ export default function ChatPage() {
   // };
 
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-  setSelectedRawFiles(files)
-  // console.log(files)
-    if (files.length > 10) {
-      return;
-    }else{
-const imageArray = [];
-files.forEach((file, i) => {
-  setFileToBase(file, (dataURI) => {
-    // Add the data URI to the image array
-    imageArray.push(dataURI);
-
-    // If all images have been processed, update state
-    if (imageArray.length === files.length) {
-      // console.log(imageArray)
-     setSelectedFiles(imageArray);
+    const files = e.target.files;
+    const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+    const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif']; // Allowed image MIME types
+  
+    // Check if the number of files exceeds the limit (5 files in this case)
+    if (files.length > 5) {
+      alert("You can only upload up to 5 files.");
+      return; // Stop further processing if more than 5 files are selected
     }
-  });
-});
+  
+    // Calculate the total size of all selected files
+    let totalSize = 0;
+    for (let i = 0; i < files.length; i++) {
+      totalSize += files[i].size;
+  
+      // Check if the file is a video
+      if (files[i].type.startsWith('video/')) {
+        alert("Videos are not allowed. Please select only images.");
+        return; // Stop further processing if any file is a video
+      }
+  
+      // Check if the file type is allowed (image)
+      if (!ALLOWED_FILE_TYPES.includes(files[i].type)) {
+        alert(`The file "${files[i].name}" is not a valid image type. Please select only images.`);
+        return; // Stop further processing if file is not an allowed image type
+      }
     }
+  
+    // Check if the total file size exceeds the 10 MB limit
+    if (totalSize > MAX_TOTAL_SIZE) {
+      alert("The total file size exceeds the 10 MB limit. Please select smaller files.");
+      return; // Stop further processing if the total size exceeds the limit
+    }
+  
+    console.log(files);
+  
+    // If the files are valid, proceed with further handling
+    setSelectedRawFiles(Array.from(files));
+  
+    // Create an array to hold the image data URIs
+    const imageArray = [];
+  
+    // Process each file and convert it to a data URI
+    Array.from(files).forEach((file, i) => {
+      setFileToBase(file, (dataURI) => {
+        // Add the data URI to the image array
+        imageArray.push(dataURI);
+  
+        // If all files have been processed, update the state
+        if (imageArray.length === files.length) {
+          setSelectedFiles(imageArray); // Update selected files in state
+        }
+      });
+    });
   };
+  
+//   const handleFileChange = (e) => {
+//     const files = Array.from(e.target.files);
+//   setSelectedRawFiles(files)
+//   // console.log(files)
+//     if (files.length > 5) {
+//       return;
+//     }else{
+// const imageArray = [];
+// files.forEach((file, i) => {
+//   setFileToBase(file, (dataURI) => {
+//     // Add the data URI to the image array
+//     imageArray.push(dataURI);
+
+//     // If all images have been processed, update state
+//     if (imageArray.length === files.length) {
+//       // console.log(imageArray)
+//      setSelectedFiles(imageArray);
+//     }
+//   });
+// });
+//     }
+//   };
   
   // Base64 conversion function for displaying images
   const setFileToBase = (file, callback) => {
@@ -108,7 +165,7 @@ files.forEach((file, i) => {
       });
   
       // Append additional data like senderId and receiverId
-      formData.append('senderId', data.id);
+      formData.append('senderId', data.users.id);
       formData.append('receiverId', 'admin');
   
       // Perform the fetch request to upload files
@@ -170,9 +227,12 @@ const LoadingIndicator = ({ isLoading }) => {
 const handleButtonClick = () => {
   const inputRef = document.createElement('input');
   inputRef.type = 'file';
-  inputRef.multiple = true; 
+  inputRef.multiple = true;
 
-  inputRef.addEventListener('change', handleFileChange);
+  // Set the file size limit (10 MB)
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+
+  inputRef.addEventListener('change', (event) => handleFileChange(event, MAX_FILE_SIZE));
   inputRef.click();
 };
 
@@ -249,6 +309,25 @@ useEffect(() => {
       console.error('Error:', error);
     }
   };
+  const whatsappMessage = async (message) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/sendWhatsapp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message:`You have a message from ${data.users.id}`,
+        }),
+      });
+      const dataRes = await res.json();
+      // setIsLoading(false)
+      console.log(dataRes)
+    } catch (error) {
+      // setIsLoading(false)
+      console.error('Error:', error);
+    }
+  };
+
+
 
   // const handleSendMessage = () => {
   //   if (!inputMessage.trim()) return;
@@ -287,6 +366,7 @@ useEffect(() => {
     try {
       await replyMessage(`${inputMessage}`); // Send the message
       await fetchMessages(data.users.id); // Fetch the messages after the reply
+      await whatsappMessage(`${inputMessage}`); // Fetch the messages after the reply
       // await sendMail(inputMessage, data.users.username);
     } catch (error) {
       console.error('Error during sending or fetching messages:', error);
@@ -507,7 +587,7 @@ useEffect(() => {
           <button className="sendBut" onClick={handleUpload}>Send</button>
         </span>
       </div>
-         <div className="image-preview receiver">
+         {/* <div className="image-preview receiver">
           <span className='receiverInner'>
             <div className="files">
               <span className='file img'></span>
@@ -521,9 +601,9 @@ useEffect(() => {
               <span className='file'></span>
               <span className='file vid'></span>
             </div>
-            {/* <button>Send</button> */}
+         <button>Send</button> 
           </span>
-        </div>
+        </div> */}
         </div>
         <div className="inputSection">
           <input
