@@ -51,6 +51,16 @@
         background: rgba(255, 255, 255, 0.685);
       }
     }
+    .passwordDiv{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      i{
+        display: block;
+        font-size: 18px;
+        margin: 7px;
+      }
+    }
   
     button {
       width: 100%;
@@ -124,6 +134,17 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         background: rgba(255, 255, 255, 0.685);
+      }
+    }
+
+    .passwordDiv{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      i{
+        display: block;
+        font-size: 18px;
+        margin: 7px;
       }
     }
   
@@ -337,7 +358,7 @@ height: auto;
       overflow: auto;
       .file{
         width: 5em;
-        height: 5em;
+        // height: 8em;
         display: block;
         border: 1px solid rgba(50, 58, 50, 0.048);
         margin: 3px;
@@ -352,6 +373,9 @@ height: auto;
         width: 100%;
         height: 10em;
       }
+    }
+    img{
+      width: 100%;
     }
   }
 .dot{
@@ -467,7 +491,7 @@ height: auto;
 .biggerPic{
   width: 100%;
   height: 100vh;
-  border: 1px solid rgb(255, 255, 255);
+  // border: 1px solid rgb(255, 255, 255);
   position: fixed;
   top: 0%;
   left: 0%;
@@ -477,10 +501,10 @@ align-items: center;
 justify-content: center;
 z-index: 2;
 // position: relative;
-display:none;
+// display:none;
   .img{
-   width: 60%;
-   height: 22em;
+   width: 80%;
+  //  height: 90%;
    border: 1px solid rgba(255, 255, 255, 0.281);
    display: flex;
 align-items: center;
@@ -488,9 +512,21 @@ justify-content: center;
 // overflow: auto;
 border-radius: 20px;
 position: absolute;
+ @media (min-width:768px) {
+  &{
+    width: 50%;
+    // height: 90%;
+  }
+ }
 img{
   width: 100%;
-  height:100%;
+  height:80%;
+  @media (min-width:768px) {
+    &{
+      // width: 0%;
+      height: 60%;
+    }
+   }
 }
   }
 
@@ -538,12 +574,22 @@ img{
       
     }
 
-    #images{
-      background:url("../../public/image_asoroauto.webp");
-      background-size: cover;
-      width: 24px;
-      height:24px;
-      display: inline-block;
+   i{
+    display:block;
+    font-size: 23px;
+    // border: 1px solid #00000062; /* Theme color for border */
+    border-radius: 4px;
+    margin-left: 4px;
+    background: rgb(98, 168, 166);
+    color: white;
+    box-shadow: 0 0 5px white;
+    padding: 5px;
+    cursor: pointer;
+      // background:url("../../public/image_asoroauto.webp");
+      // background-size: cover;
+      // width: 24px;
+      // height:24px;
+      // display: inline-block;
     }
   
     button {

@@ -34,6 +34,10 @@ export default function ChatPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedRawFiles, setSelectedRawFiles] = useState([]);
   const [isVisible, setIsVisible] = useState(false); // Track visibility for transition
+  const [showPic, setshowPic] = useState("false"); // Track visibility for transition
+  const [showPicFile, setshowPicFile] = useState(""); // Track visibility for transition
+  const [uploadButton, setuploadButton] = useState("true"); // Track visibility for transition
+ 
 
   useEffect(() => {
     if (selectedRawFiles.length > 0) {
@@ -65,16 +69,22 @@ export default function ChatPage() {
   //   }
   // };
 
+  const showFileHandler = (file) => {
+ setshowPic("true")
+console.log(file)
+setshowPicFile(file)
+  }
+
   const handleFileChange = (e) => {
     const files = e.target.files;
     const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
     const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif']; // Allowed image MIME types
   
     // Check if the number of files exceeds the limit (5 files in this case)
-    if (files.length > 5) {
-      alert("You can only upload up to 5 files.");
-      return; // Stop further processing if more than 5 files are selected
-    }
+    // if (files.length > 5) {
+    //   alert("You can only upload up to 5 files.");
+    //   return; // Stop further processing if more than 5 files are selected
+    // }
   
     // Calculate the total size of all selected files
     let totalSize = 0;
@@ -156,6 +166,7 @@ export default function ChatPage() {
   };
   
   const handleUpload = async () => {
+    setIsLoading(true)
     try {
       const formData = new FormData();
   
@@ -167,7 +178,7 @@ export default function ChatPage() {
       // Append additional data like senderId and receiverId
       formData.append('senderId', data.users.id);
       formData.append('receiverId', 'admin');
-  
+
       // Perform the fetch request to upload files
       const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method: 'POST',
@@ -179,11 +190,14 @@ export default function ChatPage() {
   
       if (!response.ok) {
         throw new Error(result.message || 'Upload failed');
+        setIsLoading(false)
       }
-  
-      console.log(result); // Handle the successful response
+      setSelectedRawFiles([])
+      // console.log(result); // Handle the successful response
+      await fetchMessages(data.users.id);
   
     } catch (error) {
+      setIsLoading(false)
       console.error('Error uploading:', error);
       alert('Error uploading files');
     }
@@ -198,7 +212,7 @@ export default function ChatPage() {
       const imageUrl = URL.createObjectURL(file);
       // console.log(imageUrl)
       return <span className="file img" key={file.name}>
-        <img className="img" key={file.name} src={imageUrl} alt="thumbnail" />
+        <img className="img" key={file.name} src={imageUrl} alt="thumbnail" onClick={()=>showFileHandler(imageUrl)} />
       </span>;  // Only render img span for image files
     }
 
@@ -214,6 +228,28 @@ export default function ChatPage() {
 
     return null;  // Optionally handle unsupported file types
   };
+
+
+  
+  const renderBackendFiles = (arr) => {
+    console.log(arr)
+    if (arr && arr.length > 0) {
+      return arr.map((item, i) => (
+        <span className="file img" key={i}>
+          <img
+            className="img"
+            src={item}  // Assuming 'item' is the image URL
+            alt="thumbnail"
+            onClick={() => showFileHandler(item)}  // Pass 'item' (image URL) directly
+          />
+        </span>
+      ));
+    }
+  
+    return null;  // Optionally handle unsupported file types or empty array
+  };
+  
+
 
   // Loading Indicator component
 const LoadingIndicator = ({ isLoading }) => {
@@ -238,6 +274,7 @@ const handleButtonClick = () => {
 
 const fetchData = async () => {
   // setLoading(true);
+  setIsLoading(true)
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/verifyAUser`, {
       method: "GET",
@@ -366,8 +403,8 @@ useEffect(() => {
     try {
       await replyMessage(`${inputMessage}`); // Send the message
       await fetchMessages(data.users.id); // Fetch the messages after the reply
-      await whatsappMessage(`${inputMessage}`); // Fetch the messages after the reply
-      // await sendMail(inputMessage, data.users.username);
+      // await whatsappMessage(`${inputMessage}`); // Fetch the messages after the reply
+      await sendMail(inputMessage, data.users.username);
     } catch (error) {
       console.error('Error during sending or fetching messages:', error);
     } finally {
@@ -477,20 +514,33 @@ useEffect(() => {
       const separatedData = separateByMyId(data.result);
       console.log(data)
       // setIsLoading(false)
-  
+      setIsLoading(false)
       // Assuming separatedData[0] is the array of messages
       const messages = separatedData[0];
   
       // Sort messages based on a timestamp (adjust the key according to your data structure)
       messages.sort((a, b) => new Date(a.timeRecieved) - new Date(b.timeRecieved));
-  
+
       const newArr = messages.map(item => {
         if (item.otherId === "admin") {
           return { elem: item.message, role: "sender" };
-        } else {
+        } else if(item.message.startsWith("https") && item.otherId === "admin" ){
+          return { elem: item.message, role: "sender" };
+        }
+        else {
           return { elem: item.message, role: "receiver" };
         }
       });
+
+      // const allFiles = [];
+      // messages.forEach(item => {
+      //   if (item.message.startsWith("https") && item.otherId === "admin" ) {
+      //     allFiles.push(item.message);
+      //   }
+      // });
+      
+      // console.log(allFiles);
+      // renderBackendFiles(allFiles)
   
       // Filter unread messages
       const unreadMessages = messages.filter(item => item.seen_by_user !== "SEEN");
@@ -517,7 +567,7 @@ useEffect(() => {
             // You can log data2 if necessary
           }
         } catch (error) {
-          // setIsLoading(false)
+          setIsLoading(false)
           console.error('Error updating message status:', error);
         }
       };
@@ -528,6 +578,7 @@ useEffect(() => {
       // Now update the messages and hide the animated message
       setMessages(newArr);
     } catch (error) {
+      setIsLoading(false)
       console.error('Error fetching messages:', error);
     } finally {
       setShowAnimatedMessage(false); // Hide animated message after everything is done
@@ -563,12 +614,24 @@ useEffect(() => {
 
             return (
               <div key={index} className={messageClass}>
-                <div 
-                  className={`${messageClass}Inner`} 
-                  dangerouslySetInnerHTML={{ __html: msg.elem }} 
-                />
+                {msg.elem.startsWith("http") ? (
+                  <div className={`${messageClass}Inner`}>
+                    <img
+                      className="img"
+                      src={msg.elem}  // Assuming 'msg.elem' is the image URL
+                      alt="thumbnail"
+                      onClick={() => showFileHandler(msg.elem)}  // Use 'msg.elem' for the image URL
+                    />
+                  </div>
+                ) : (
+                  <div 
+                    className={`${messageClass}Inner`} 
+                    dangerouslySetInnerHTML={{ __html: msg.elem }} 
+                  />
+                )}
               </div>
             );
+            
           })}
          {showAnimatedMessage? <AnimatedMessage role={'sender'} />: ""}
          <div
@@ -613,15 +676,20 @@ useEffect(() => {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-        <button id="images" onClick={handleButtonClick}></button>
+          <i class="bi bi-paperclip" onClick={handleButtonClick}></i>
+           {/* <button id="images" style={{display:"flex"}} onClick={handleButtonClick}></button> */}
           <button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
             Send
           </button>
         </div>
-        <div className="biggerPic">
-          <div className="biggerPicWrapper"></div>
-          <div className="img"><img src="image_asoroauto.webp" alt="" /></div>
-        </div>
+        {showPic === "true" ?<div className="biggerPic" style={{display:"flex"}}>
+          <div className="biggerPicWrapper" onClick={()=>{(setshowPic("false"))}}></div>
+          <div className="img"><img src={`${showPicFile}`} alt="" /></div>
+        </div>:
+         <div className="biggerPic"style={{display:"none"}}>
+         <div className="biggerPicWrapper"></div>
+         <div className="img"><img src="image_asoroauto.webp" alt="" /></div>
+       </div>}
       </div>
     </>
   );

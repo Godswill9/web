@@ -11,6 +11,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,6 +22,11 @@ const Login = () => {
       setPassword(value);
     }
   };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevState) => !prevState);
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,15 +117,22 @@ const Login = () => {
               />
             </div>
             <div className="form-group">
-              <label>Password:</label>
-              <input 
-                type="password" 
-                name="password" 
-                value={password} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
+      <label>Password:</label>
+      <div className="passwordDiv">
+        <input 
+          type={isPasswordVisible ? 'text' : 'password'} 
+          name="password" 
+          value={password} 
+          onChange={handleChange} 
+          required 
+        />
+        <i 
+          className={`bi ${isPasswordVisible ? 'bi-eye-fill' : 'bi-eye-slash-fill'}`} 
+          onClick={togglePasswordVisibility} 
+          style={{ cursor: 'pointer' }}
+        ></i>
+      </div>
+    </div>
             <button type="submit">Log In</button>
           </form>
           <span><a href="/signup">Signup</a> for an account</span>

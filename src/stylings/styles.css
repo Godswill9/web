@@ -48,6 +48,16 @@
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.685);
 }
+.signup-container .passwordDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.signup-container .passwordDiv i {
+  display: block;
+  font-size: 18px;
+  margin: 7px;
+}
 .signup-container button {
   width: 100%;
   padding: 10px;
@@ -113,6 +123,16 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.685);
+}
+.login-container .passwordDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.login-container .passwordDiv i {
+  display: block;
+  font-size: 18px;
+  margin: 7px;
 }
 .login-container button {
   width: 100%;
@@ -274,7 +294,6 @@
 }
 .sender .senderInner .files .file {
   width: 5em;
-  height: 5em;
   display: block;
   border: 1px solid rgba(50, 58, 50, 0.048);
   margin: 3px;
@@ -288,6 +307,9 @@
 .sender .senderInner .files .vid {
   width: 100%;
   height: 10em;
+}
+.sender .senderInner img {
+  width: 100%;
 }
 .sender .dot {
   max-width: 17em;
@@ -389,7 +411,6 @@
 .biggerPic {
   width: 100%;
   height: 100vh;
-  border: 1px solid rgb(255, 255, 255);
   position: fixed;
   top: 0%;
   left: 0%;
@@ -397,11 +418,9 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
-  display: none;
 }
 .biggerPic .img {
-  width: 60%;
-  height: 22em;
+  width: 80%;
   border: 1px solid rgba(255, 255, 255, 0.281);
   display: flex;
   align-items: center;
@@ -409,9 +428,19 @@
   border-radius: 20px;
   position: absolute;
 }
+@media (min-width: 768px) {
+  .biggerPic .img {
+    width: 50%;
+  }
+}
 .biggerPic .img img {
   width: 100%;
-  height: 100%;
+  height: 80%;
+}
+@media (min-width: 768px) {
+  .biggerPic .img img {
+    height: 60%;
+  }
 }
 .biggerPic .biggerPicWrapper {
   width: 100%;
@@ -449,12 +478,16 @@
 .inputSection input:focus {
   outline: none; /* Remove default outline */
 }
-.inputSection #images {
-  background: url("../../public/image_asoroauto.webp");
-  background-size: cover;
-  width: 24px;
-  height: 24px;
-  display: inline-block;
+.inputSection i {
+  display: block;
+  font-size: 23px;
+  border-radius: 4px;
+  margin-left: 4px;
+  background: rgb(98, 168, 166);
+  color: white;
+  box-shadow: 0 0 5px white;
+  padding: 5px;
+  cursor: pointer;
 }
 .inputSection button {
   padding: 10px;
