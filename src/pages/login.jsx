@@ -4,6 +4,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 import { useNavigate } from 'react-router-dom';
 import Loader from './loader';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,6 +30,49 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
   };
+
+  gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies 
+
+  const container = useRef();
+
+  useGSAP(() => {
+    gsap.fromTo(
+      ".imgWrapper",
+      { 
+        y: 350,  
+        x:0,// Start off-screen (bottom)
+        opacity: 0,     // Start fully hidden
+        rotate: 270     // Start rotated -90 degrees
+      },
+      { 
+        y: 0, 
+        x:0,          // Move to normal position
+        opacity: 0.5,     // Fade in
+        rotate: 0,      // Rotate to 0 degrees (normal)
+        duration: 1.5,  // Animation duration
+        delay: 1,       // Delay before animation starts
+        ease: "power2.out"
+      }
+    );
+    gsap.fromTo(
+      ".login-container .inner",
+      { 
+        // y: 350,         // Start off-screen (bottom)
+        opacity: 0,     // Start fully hidden
+        // rotate: 270     // Start rotated -90 degrees
+      },
+      { 
+        y: 0,    
+        x:0,       // Move to normal position
+        opacity: 1,     // Fade in
+        // rotate: 0,      // Rotate to 0 degrees (normal)
+        duration: 1.5,  // Animation duration
+        delay: 1,       // Delay before animation starts
+        ease: "power2.out"
+      }
+    );
+  }, { scope: container });
+
 
 
   const handleSubmit = async (e) => {
@@ -91,7 +138,7 @@ const Login = () => {
   };
 
   return (
-    <>
+    <div className='allCover'ref={container}>
       <ToastContainer />
       {loading ? (
             <Loader />
@@ -138,7 +185,13 @@ const Login = () => {
           <span><a href="/signup">Signup</a> for an account</span>
         </div>
       </div>
-    </>
+      {/* <div className="imgWrapper"> */}
+      <img className='imgWrapper' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+      {/* <img className='imgWrapper2' src="pexels-pixabay-210881-removebg-preview.png" alt="" /> */}
+        {/* <img className='mid' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+        <img className='leftt' src="pexels-pixabay-210881-removebg-preview.png" alt="" /> */}
+      {/* </div> */}
+    </div>
   );
 };
 

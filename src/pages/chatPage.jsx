@@ -7,6 +7,8 @@ import Cookies from 'js-cookie';
 import Header from './header';
 import Loader from './loader';
 import io from 'socket.io-client'; // Import socket.io-client
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 
 const BouncingSpinner = () => {
@@ -298,6 +300,56 @@ useEffect(() => {
     }
   };
   
+
+  gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies 
+
+  const container = useRef();
+
+  useGSAP(() => {
+    gsap.fromTo(
+      ".header",
+      { 
+        y: -300,         // Start off-screen (bottom)
+      },
+      { 
+        y: 0,            // Rotate to 0 degrees (normal)
+        duration: 1.5,  // Animation duration
+        delay: 1,       // Delay before animation starts
+        ease: "power2.out"
+      }
+    );
+    gsap.fromTo(
+      ".container .innerCont",
+      { 
+        // y: 350,         // Start off-screen (bottom)
+        opacity: 0,     // Start fully hidden
+        // rotate: 270     // Start rotated -90 degrees
+      },
+      {        // Move to normal position
+        opacity: 1,     // Fade in
+        // rotate: 0,      // Rotate to 0 degrees (normal)
+        duration: 1.5,  // Animation duration
+        delay: 2,       // Delay before animation starts
+        ease: "power2.out"
+      }
+    );
+    gsap.fromTo(
+      ".inputSection",
+      { 
+        y: 350,         // Start off-screen (bottom)
+        // opacity: 0,     // Start fully hidden
+        // rotate: 270     // Start rotated -90 degrees
+      },
+      { 
+        y: 0,           // Fade in
+        // rotate: 0,      // Rotate to 0 degrees (normal)
+        duration: 1.5,  // Animation duration
+        delay: 2.5,       // Delay before animation starts
+        ease: "power2.out"
+      }
+    );
+  }, { scope: container });
+
   
 
   const sendMail=async (message, sender)=>{
@@ -480,7 +532,7 @@ useEffect(() => {
   }, [messages, showAnimatedMessage]); // Scroll when messages or the animated message changes
   
   return (
-    <>
+    <div ref={container}>
       <Header />
       <div className="container">
       <LoadingIndicator isLoading={isLoading} />
@@ -570,7 +622,7 @@ useEffect(() => {
       </div> */}
       </div>
    
-    </>
+    </div>
   );
 };
 function formatStringAndWrapDivs(inputString) {
