@@ -54,16 +54,15 @@ const Signup = () => {
     gsap.fromTo(
       ".imgWrapper",
       { 
-        y: 350,  
+        y: 0,  
         x:0,       // Start off-screen (bottom)
         opacity: 0,     // Start fully hidden
-        rotate: -270     // Start rotated -90 degrees
+        // rotate: -270     // Start rotated -90 degrees
       },
       { 
         y: 0, 
         x:0,          // Move to normal position
-        opacity: 0.5,     // Fade in
-        rotate: 0,      // Rotate to 0 degrees (normal)
+        opacity: 0.5,        // Rotate to 0 degrees (normal)
         duration: 1.5,  // Animation duration
         delay: 1,       // Delay before animation starts
         ease: "power2.out"
@@ -224,7 +223,7 @@ const Signup = () => {
           <span><a href="/login">login</a> your account</span>
         </div>
       </div>
-      <img className='imgWrapper' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+      {/* <img className='imgWrapper' src="pexels-pixabay-210881-removebg-preview.png" alt="" /> */}
      
     </div>
   );
