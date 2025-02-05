@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+body {
+  position: relative;
+  overflow: hidden;
+}
+
 .signup-container {
   display: flex;
   align-items: center;
@@ -196,13 +201,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #111111;
-  background: rgba(42, 0, 231, 0.137);
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.418), #9bc3f0, white);
   width: 100%;
   overflow: hidden;
   min-height: 100vh; /* Ensure container takes at least full viewport height */
   height: auto;
-  background: url("../../public/image_asoroauto.webp") no-repeat center center, linear-gradient(40deg, white, rgba(7, 65, 48, 0.479), rgba(0, 231, 231, 0.212));
+  position: relative;
+  z-index: 2;
   background-attachment: fixed; /* Optional: Keeps the background image fixed while scrolling */
   background-position: center; /* Ensures the image is centered */
 }
@@ -231,7 +236,7 @@
   width: 55%;
   height: 26.3em; /* Maintain fixed height */
   border-radius: 10px; /* Rounded corners */
-  background: linear-gradient(white, rgba(7, 65, 48, 0.205), rgba(0, 231, 231, 0.212));
+  background: linear-gradient(rgba(255, 255, 255, 0.575), rgba(6, 10, 240, 0.068));
   background-blend-mode: color-burn;
   background-position-y: top;
   font-family: sans-serif;
@@ -240,7 +245,26 @@
   max-height: 70vh;
   margin-top: 5em;
 }
+.innerCont::-webkit-scrollbar {
+  width: 5px;
+}
+.innerCont::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+.innerCont::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.innerCont::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
 
+@media (max-width: 768px) {
+  .innerCont {
+    width: 80%; /* Full width on smaller screens */
+  }
+}
 @media (max-width: 636px) {
   .innerCont {
     width: 80%; /* Full width on smaller screens */
@@ -263,8 +287,7 @@
   max-width: 19em;
   font-size: 13px;
   font-family: sans-serif;
-  background: rgba(97, 167, 162, 0.945);
-  border: 1px solid rgb(94, 167, 151);
+  background: #60a6f0;
   padding: 10px; /* Inner padding */
   border-radius: 8px; /* Rounded corners */
   height: -moz-fit-content;
@@ -280,8 +303,9 @@
   width: 100%;
   padding: 10px;
   display: block;
-  background: rgba(3, 37, 35, 0.945);
-  border: 1px solid rgb(94, 167, 151);
+  background: #051c35;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.171);
   color: white;
 }
 .sender .senderInner .files {
@@ -333,7 +357,7 @@
   max-width: 19em;
   font-size: 13px;
   font-family: sans-serif;
-  background-color: #f5f5f5; /* Light green background */
+  background-color: hsl(0, 100%, 99%); /* Light green background */
   border: 1px solid #eeece9; /* Darker green border */
   padding: 10px; /* Inner padding */
   border-radius: 8px; /* Rounded corners */
@@ -426,11 +450,12 @@
   align-items: center;
   justify-content: center;
   border-radius: 20px;
+  padding-top: 4em;
   position: absolute;
 }
 @media (min-width: 768px) {
   .biggerPic .img {
-    width: 50%;
+    width: 40%;
   }
 }
 .biggerPic .img img {
@@ -483,7 +508,7 @@
   font-size: 23px;
   border-radius: 4px;
   margin-left: 4px;
-  background: rgb(98, 168, 166);
+  background: #007AFF;
   color: white;
   box-shadow: 0 0 5px white;
   padding: 5px;
@@ -492,17 +517,17 @@
 .inputSection button {
   padding: 10px;
   margin-left: 10px;
-  background: rgba(10, 50, 66, 0.5568627451); /* Theme color for button */
+  background: #007AFF; /* Theme color for button */
   color: white;
   border: none;
   border-radius: 4px;
   height: 4em;
 }
 .inputSection button:hover {
-  background: rgba(10, 50, 66, 0.5568627451); /* Darker shade on hover */
+  background: #0264ce; /* Darker shade on hover */
 }
 .inputSection button:disabled {
-  background: rgba(75, 123, 163, 0.368627451); /* Light grey for disabled state */
+  background: rgba(0, 123, 255, 0.2862745098); /* Light grey for disabled state */
 }
 
 @media (max-width: 636px) {
@@ -537,13 +562,13 @@
 }
 
 .header {
-  background-color: rgba(8, 39, 48, 0.8);
-  color: white;
+  background: linear-gradient(#ecf2f8, white);
   padding: 1rem;
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 3;
+  border-bottom: 2px solid white;
 }
 .header .header-content {
   display: flex;
@@ -623,6 +648,7 @@
   font-size: 0.8rem;
   padding: 4px;
   border-radius: 5px;
+  color: rgb(0, 0, 0);
 }
 .header .header-content .nav ul li a:hover {
   color: rgb(7, 7, 85);

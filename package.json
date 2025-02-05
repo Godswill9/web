@@ -1,6 +1,7 @@
 {
   "name": "my-react-app",
   "private": true,
+  "homepage": "admin.asoroautomotive.com",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

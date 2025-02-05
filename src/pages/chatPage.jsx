@@ -26,6 +26,8 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [requestCount, setRequestCount] = useState(0);
   const [showAnimatedMessage, setShowAnimatedMessage] = useState(false);
+  const [showImg, setShowImg] = useState(false);
+  const [imgValue, setimgValue] = useState("");
   const innerContRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,10 +36,6 @@ export default function ChatPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedRawFiles, setSelectedRawFiles] = useState([]);
   const [isVisible, setIsVisible] = useState(false); // Track visibility for transition
-  const [showPic, setshowPic] = useState("false"); // Track visibility for transition
-  const [showPicFile, setshowPicFile] = useState(""); // Track visibility for transition
-  const [uploadButton, setuploadButton] = useState("true"); // Track visibility for transition
- 
 
   useEffect(() => {
     if (selectedRawFiles.length > 0) {
@@ -46,6 +44,7 @@ export default function ChatPage() {
       setTimeout(() => setIsVisible(false), 300); // Wait for transition to finish before setting display: none
     }
   }, [selectedRawFiles]);
+
  
 
   // const handleFileChange = (event) => {
@@ -69,91 +68,28 @@ export default function ChatPage() {
   //   }
   // };
 
-  const showFileHandler = (file) => {
- setshowPic("true")
-console.log(file)
-setshowPicFile(file)
-  }
-
   const handleFileChange = (e) => {
-    const files = e.target.files;
-    const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
-    const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif']; // Allowed image MIME types
-  
-    // Check if the number of files exceeds the limit (5 files in this case)
-    // if (files.length > 5) {
-    //   alert("You can only upload up to 5 files.");
-    //   return; // Stop further processing if more than 5 files are selected
-    // }
-  
-    // Calculate the total size of all selected files
-    let totalSize = 0;
-    for (let i = 0; i < files.length; i++) {
-      totalSize += files[i].size;
-  
-      // Check if the file is a video
-      if (files[i].type.startsWith('video/')) {
-        alert("Videos are not allowed. Please select only images.");
-        return; // Stop further processing if any file is a video
-      }
-  
-      // Check if the file type is allowed (image)
-      if (!ALLOWED_FILE_TYPES.includes(files[i].type)) {
-        alert(`The file "${files[i].name}" is not a valid image type. Please select only images.`);
-        return; // Stop further processing if file is not an allowed image type
-      }
-    }
-  
-    // Check if the total file size exceeds the 10 MB limit
-    if (totalSize > MAX_TOTAL_SIZE) {
-      alert("The total file size exceeds the 10 MB limit. Please select smaller files.");
-      return; // Stop further processing if the total size exceeds the limit
-    }
-  
-    console.log(files);
-  
-    // If the files are valid, proceed with further handling
-    setSelectedRawFiles(Array.from(files));
-  
-    // Create an array to hold the image data URIs
-    const imageArray = [];
-  
-    // Process each file and convert it to a data URI
-    Array.from(files).forEach((file, i) => {
-      setFileToBase(file, (dataURI) => {
-        // Add the data URI to the image array
-        imageArray.push(dataURI);
-  
-        // If all files have been processed, update the state
-        if (imageArray.length === files.length) {
-          setSelectedFiles(imageArray); // Update selected files in state
-        }
-      });
-    });
-  };
-  
-//   const handleFileChange = (e) => {
-//     const files = Array.from(e.target.files);
-//   setSelectedRawFiles(files)
-//   // console.log(files)
-//     if (files.length > 5) {
-//       return;
-//     }else{
-// const imageArray = [];
-// files.forEach((file, i) => {
-//   setFileToBase(file, (dataURI) => {
-//     // Add the data URI to the image array
-//     imageArray.push(dataURI);
+    const files = Array.from(e.target.files);
+  setSelectedRawFiles(files)
+  // console.log(files)
+    if (files.length > 10) {
+      return;
+    }else{
+const imageArray = [];
+files.forEach((file, i) => {
+  setFileToBase(file, (dataURI) => {
+    // Add the data URI to the image array
+    imageArray.push(dataURI);
 
-//     // If all images have been processed, update state
-//     if (imageArray.length === files.length) {
-//       // console.log(imageArray)
-//      setSelectedFiles(imageArray);
-//     }
-//   });
-// });
-//     }
-//   };
+    // If all images have been processed, update state
+    if (imageArray.length === files.length) {
+      // console.log(imageArray)
+     setSelectedFiles(imageArray);
+    }
+  });
+});
+    }
+  };
   
   // Base64 conversion function for displaying images
   const setFileToBase = (file, callback) => {
@@ -166,7 +102,6 @@ setshowPicFile(file)
   };
   
   const handleUpload = async () => {
-    setIsLoading(true)
     try {
       const formData = new FormData();
   
@@ -176,9 +111,9 @@ setshowPicFile(file)
       });
   
       // Append additional data like senderId and receiverId
-      formData.append('senderId', data.users.id);
+      formData.append('senderId', data.id);
       formData.append('receiverId', 'admin');
-
+  
       // Perform the fetch request to upload files
       const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method: 'POST',
@@ -190,14 +125,11 @@ setshowPicFile(file)
   
       if (!response.ok) {
         throw new Error(result.message || 'Upload failed');
-        setIsLoading(false)
       }
-      setSelectedRawFiles([])
-      // console.log(result); // Handle the successful response
-      await fetchMessages(data.users.id);
+  
+      console.log(result); // Handle the successful response
   
     } catch (error) {
-      setIsLoading(false)
       console.error('Error uploading:', error);
       alert('Error uploading files');
     }
@@ -212,7 +144,7 @@ setshowPicFile(file)
       const imageUrl = URL.createObjectURL(file);
       // console.log(imageUrl)
       return <span className="file img" key={file.name}>
-        <img className="img" key={file.name} src={imageUrl} alt="thumbnail" onClick={()=>showFileHandler(imageUrl)} />
+        <img className="img" key={file.name} src={imageUrl} alt="thumbnail" />
       </span>;  // Only render img span for image files
     }
 
@@ -229,28 +161,6 @@ setshowPicFile(file)
     return null;  // Optionally handle unsupported file types
   };
 
-
-  
-  const renderBackendFiles = (arr) => {
-    console.log(arr)
-    if (arr && arr.length > 0) {
-      return arr.map((item, i) => (
-        <span className="file img" key={i}>
-          <img
-            className="img"
-            src={item}  // Assuming 'item' is the image URL
-            alt="thumbnail"
-            onClick={() => showFileHandler(item)}  // Pass 'item' (image URL) directly
-          />
-        </span>
-      ));
-    }
-  
-    return null;  // Optionally handle unsupported file types or empty array
-  };
-  
-
-
   // Loading Indicator component
 const LoadingIndicator = ({ isLoading }) => {
   return (
@@ -263,18 +173,14 @@ const LoadingIndicator = ({ isLoading }) => {
 const handleButtonClick = () => {
   const inputRef = document.createElement('input');
   inputRef.type = 'file';
-  inputRef.multiple = true;
+  inputRef.multiple = true; 
 
-  // Set the file size limit (10 MB)
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
-
-  inputRef.addEventListener('change', (event) => handleFileChange(event, MAX_FILE_SIZE));
+  inputRef.addEventListener('change', handleFileChange);
   inputRef.click();
 };
 
 const fetchData = async () => {
   // setLoading(true);
-  setIsLoading(true)
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/verifyAUser`, {
       method: "GET",
@@ -346,25 +252,6 @@ useEffect(() => {
       console.error('Error:', error);
     }
   };
-  const whatsappMessage = async (message) => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/sendWhatsapp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message:`You have a message from ${data.users.id}`,
-        }),
-      });
-      const dataRes = await res.json();
-      // setIsLoading(false)
-      console.log(dataRes)
-    } catch (error) {
-      // setIsLoading(false)
-      console.error('Error:', error);
-    }
-  };
-
-
 
   // const handleSendMessage = () => {
   //   if (!inputMessage.trim()) return;
@@ -403,8 +290,7 @@ useEffect(() => {
     try {
       await replyMessage(`${inputMessage}`); // Send the message
       await fetchMessages(data.users.id); // Fetch the messages after the reply
-      // await whatsappMessage(`${inputMessage}`); // Fetch the messages after the reply
-      await sendMail(inputMessage, data.users.username);
+      // await sendMail(inputMessage, data.users.username);
     } catch (error) {
       console.error('Error during sending or fetching messages:', error);
     } finally {
@@ -497,6 +383,11 @@ useEffect(() => {
   //     setShowAnimatedMessage(false);
   //   }
   // };
+
+  const fetchImg=(img)=>{
+    setShowImg(true)
+    setimgValue(img)
+  }
   
 
   const fetchMessages = async (id) => {
@@ -514,33 +405,20 @@ useEffect(() => {
       const separatedData = separateByMyId(data.result);
       console.log(data)
       // setIsLoading(false)
-      setIsLoading(false)
+  
       // Assuming separatedData[0] is the array of messages
       const messages = separatedData[0];
   
       // Sort messages based on a timestamp (adjust the key according to your data structure)
       messages.sort((a, b) => new Date(a.timeRecieved) - new Date(b.timeRecieved));
-
+  
       const newArr = messages.map(item => {
         if (item.otherId === "admin") {
           return { elem: item.message, role: "sender" };
-        } else if(item.message.startsWith("https") && item.otherId === "admin" ){
-          return { elem: item.message, role: "sender" };
-        }
-        else {
+        } else {
           return { elem: item.message, role: "receiver" };
         }
       });
-
-      // const allFiles = [];
-      // messages.forEach(item => {
-      //   if (item.message.startsWith("https") && item.otherId === "admin" ) {
-      //     allFiles.push(item.message);
-      //   }
-      // });
-      
-      // console.log(allFiles);
-      // renderBackendFiles(allFiles)
   
       // Filter unread messages
       const unreadMessages = messages.filter(item => item.seen_by_user !== "SEEN");
@@ -567,7 +445,7 @@ useEffect(() => {
             // You can log data2 if necessary
           }
         } catch (error) {
-          setIsLoading(false)
+          // setIsLoading(false)
           console.error('Error updating message status:', error);
         }
       };
@@ -578,7 +456,6 @@ useEffect(() => {
       // Now update the messages and hide the animated message
       setMessages(newArr);
     } catch (error) {
-      setIsLoading(false)
       console.error('Error fetching messages:', error);
     } finally {
       setShowAnimatedMessage(false); // Hide animated message after everything is done
@@ -611,27 +488,23 @@ useEffect(() => {
           {messages.map((msg, index) => {
             const isError = msg.elem.includes("An error occurred");
             const messageClass = isError ? 'errorMessage' : msg.role;
-
+                if(msg.elem.startsWith("https:")){
+                  return (
+                    <div key={index} className={messageClass} onClick={()=>fetchImg(msg.elem)}>
+                        <div className={`${messageClass}Inner`}>
+                           <img src={msg.elem} alt="" /> 
+                       </div>
+                    </div>
+                  );
+                }
             return (
               <div key={index} className={messageClass}>
-                {msg.elem.startsWith("http") ? (
-                  <div className={`${messageClass}Inner`}>
-                    <img
-                      className="img"
-                      src={msg.elem}  // Assuming 'msg.elem' is the image URL
-                      alt="thumbnail"
-                      onClick={() => showFileHandler(msg.elem)}  // Use 'msg.elem' for the image URL
-                    />
-                  </div>
-                ) : (
-                  <div 
-                    className={`${messageClass}Inner`} 
-                    dangerouslySetInnerHTML={{ __html: msg.elem }} 
-                  />
-                )}
+                <div 
+                  className={`${messageClass}Inner`} 
+                  dangerouslySetInnerHTML={{ __html: msg.elem }} 
+                />
               </div>
             );
-            
           })}
          {showAnimatedMessage? <AnimatedMessage role={'sender'} />: ""}
          <div
@@ -664,7 +537,6 @@ useEffect(() => {
               <span className='file'></span>
               <span className='file vid'></span>
             </div>
-         <button>Send</button> 
           </span>
         </div> */}
         </div>
@@ -676,21 +548,28 @@ useEffect(() => {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <i class="bi bi-paperclip" onClick={handleButtonClick}></i>
-           {/* <button id="images" style={{display:"flex"}} onClick={handleButtonClick}></button> */}
+<i class="bi bi-paperclip"  onClick={handleButtonClick}></i>
           <button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
             Send
           </button>
         </div>
-        {showPic === "true" ?<div className="biggerPic" style={{display:"flex"}}>
-          <div className="biggerPicWrapper" onClick={()=>{(setshowPic("false"))}}></div>
-          <div className="img"><img src={`${showPicFile}`} alt="" /></div>
-        </div>:
-         <div className="biggerPic"style={{display:"none"}}>
-         <div className="biggerPicWrapper"></div>
-         <div className="img"><img src="image_asoroauto.webp" alt="" /></div>
-       </div>}
+        <div className="biggerPic" style={{display: showImg? "flex":"none"}}>
+          <div className="biggerPicWrapper" onClick={()=> setShowImg(false)}></div>
+          <div className="img"><img src={imgValue} alt="" /></div>
+        </div>
+
+        {/* <div className="imgWrapper">
+      <img className='top' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+        <img src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+        <img className='leftt' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
       </div>
+      <div className="imgWrapper2">
+      <img className='top' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+        <img src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+        <img className='leftt' src="pexels-pixabay-210881-removebg-preview.png" alt="" />
+      </div> */}
+      </div>
+   
     </>
   );
 };
