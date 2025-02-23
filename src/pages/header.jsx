@@ -18,7 +18,7 @@ const Header = () => {
         credentials: "include"
       });
       const usersData = await response.json();
-      console.log(usersData)
+      // console.log(usersData)
      
       if (!usersData || (usersData && usersData.message === "Please log in again.")) {
        navigate("/login")
@@ -65,7 +65,7 @@ const Header = () => {
     return unreadMessages
   })
 
-  console.log(unreadMessages)
+  // console.log(unreadMessages)
   setUnreadMessages(unreadMessages.length)
     } catch (error) {
       console.error('Error fetching messages:', error);

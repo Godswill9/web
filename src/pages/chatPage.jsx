@@ -6,6 +6,8 @@ import AnimatedMessage from './AnimatedMessage'; // Import the AnimatedMessage c
 import Cookies from 'js-cookie';
 import Header from './header';
 import Loader from './loader';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 import io from 'socket.io-client'; // Import socket.io-client
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -32,6 +34,7 @@ export default function ChatPage() {
   const [imgValue, setimgValue] = useState("");
   const innerContRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const firstMessageCalled = useRef(false); // To track if the first message has been called
   const socket = useRef(null); // Reference for the socket connection
@@ -87,6 +90,9 @@ files.forEach((file, i) => {
     if (imageArray.length === files.length) {
       // console.log(imageArray)
      setSelectedFiles(imageArray);
+     if (innerContRef.current) {
+      innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
+    }
     }
   });
 });
@@ -105,6 +111,7 @@ files.forEach((file, i) => {
   
   const handleUpload = async () => {
     try {
+      setLoading(true)
       const formData = new FormData();
   
       // Loop through selected files and append them to FormData
@@ -113,7 +120,7 @@ files.forEach((file, i) => {
       });
   
       // Append additional data like senderId and receiverId
-      formData.append('senderId', data.id);
+      formData.append('senderId', data.users.id);
       formData.append('receiverId', 'admin');
   
       // Perform the fetch request to upload files
@@ -124,18 +131,63 @@ files.forEach((file, i) => {
       });
   
       const result = await response.json(); // Parse the JSON response
-  
+      setLoading(false)
       if (!response.ok) {
         throw new Error(result.message || 'Upload failed');
       }
+      if (innerContRef.current) {
+        innerContRef.current.scrollTop = innerContRef.current.scrollHeight;
+      }
+      try {
+        await fetchMessages(data.users.id); // Fetch the messages after the reply
+        if (result.message === 'Message sent successfully') {
+          toast.success('Upload successful!', {
+            position: 'top-right',
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: 'light',
+          });
   
-      console.log(result); // Handle the successful response
+          setSelectedRawFiles([])
+        }
+        await sendMail(inputMessage, data.users.username);
+        await sendWhatsappMessage(inputMessage, data.users.username, "image");
+      } catch (error) {
+        console.error('Error during sending or fetching messages:', error);
+      } finally {
+        setShowAnimatedMessage(false); // Hide the animated message after all is done
+      }
   
     } catch (error) {
+      setLoading(false)
       console.error('Error uploading:', error);
-      alert('Error uploading files');
+         toast.error('Pls compress the image(s) or reselect smaller img files', {
+                position: 'top-right',
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: 'light',
+              });
     }
   };
+
+  const handleClearall=()=>{
+    setSelectedRawFiles([])
+    toast.success('Image(s) cleared', {
+      position: 'top-right',
+      autoClose: 200,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: 'light',
+    });
+  }
   
 
   const renderFilePreview = (file) => {
@@ -152,7 +204,7 @@ files.forEach((file, i) => {
 
     if (isVideo) {
       const videoUrl = URL.createObjectURL(file);
-      console.log(videoUrl)
+      // console.log(videoUrl)
       return <span className="file vid" key={file.name}>
           <video className="vid" key={file.name} width="120" height="90" controls poster={videoUrl}>
           <source src={videoUrl} type={file.type} />
@@ -189,14 +241,14 @@ const fetchData = async () => {
       credentials: "include"
     });
     const usersData = await response.json();
-    console.log(usersData)
+    // console.log(usersData)
    
-    if (!usersData || (usersData && usersData.message === "Please log in again.")) {
+    if (!usersData || (usersData && usersData.message === "No user found with that ID.")) {
      navigate("/login")
       setData(null); // Clear data if not logged in
       return;
     } else{
-      console.log(usersData)
+      // console.log(usersData)
     setData({ users: usersData });
     fetchMessages(usersData.id)
     }
@@ -292,7 +344,8 @@ useEffect(() => {
     try {
       await replyMessage(`${inputMessage}`); // Send the message
       await fetchMessages(data.users.id); // Fetch the messages after the reply
-      // await sendMail(inputMessage, data.users.username);
+      await sendMail(inputMessage, data.users.username);
+      await sendWhatsappMessage(inputMessage, data.users.username, "messageText");
     } catch (error) {
       console.error('Error during sending or fetching messages:', error);
     } finally {
@@ -363,7 +416,25 @@ useEffect(() => {
          }),
       });
       const dataRes = await res.json();
-      console.log(dataRes)
+      // console.log(dataRes)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const sendWhatsappMessage=async(message, sender, type)=>{
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/sendWhatsapp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message:message,
+          sender:sender,
+          type:type
+         }),
+      });
+      const dataRes = await res.json();
+      // console.log(dataRes)
     } catch (error) {
       console.error('Error:', error);
     }
@@ -455,7 +526,7 @@ useEffect(() => {
   
       const data = await response.json();
       const separatedData = separateByMyId(data.result);
-      console.log(data)
+      // console.log(data)
       // setIsLoading(false)
   
       // Assuming separatedData[0] is the array of messages
@@ -484,7 +555,7 @@ useEffect(() => {
               messageId: item.id,
               userId: item.myId,
             };
-            console.log(obj);
+            // console.log(obj);
   
             const response2 = await fetch(`${import.meta.env.VITE_API_URL}/messageSeenByUser`, {
               method: "PUT",
@@ -534,6 +605,14 @@ useEffect(() => {
   return (
     <div ref={container}>
       <Header />
+         <ToastContainer />
+         {loading ? (
+            <Loader />
+          ) : (
+            <div>
+              {/* Add any additional content you want to show when data is loaded */}
+            </div>
+          )}
       <div className="container">
       <LoadingIndicator isLoading={isLoading} />
         <div className="innerCont" ref={innerContRef}>
@@ -542,9 +621,10 @@ useEffect(() => {
             const messageClass = isError ? 'errorMessage' : msg.role;
                 if(msg.elem.startsWith("https:")){
                   return (
-                    <div key={index} className={messageClass} onClick={()=>fetchImg(msg.elem)}>
+                    // <div key={index} className={messageClass}>
+                    <div key={index} className={messageClass}>
                         <div className={`${messageClass}Inner`}>
-                           <img src={msg.elem} alt="" /> 
+                           <img src={msg.elem} alt="" onClick={()=>fetchImg(msg.elem)}/> 
                        </div>
                     </div>
                   );
@@ -572,7 +652,8 @@ useEffect(() => {
           <div className="files">
             {selectedRawFiles.map((file) => renderFilePreview(file))}
           </div>
-          <button className="sendBut" onClick={handleUpload}>Send</button>
+          <button className="sendBut" onClick={handleUpload}>Send file(s)</button>
+          <button className="sendBut" style={{background:"red"}} onClick={handleClearall}>Clear all</button>
         </span>
       </div>
          {/* <div className="image-preview receiver">
