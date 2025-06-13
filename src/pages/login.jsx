@@ -36,23 +36,23 @@ const Login = () => {
   const container = useRef();
 
   useGSAP(() => {
-    gsap.fromTo(
-      ".imgWrapper",
-      { 
-        y: 0,  
-        x:0,// Start off-screen (bottom)
-        opacity: 0,     // Start fully hidden
-        // rotate: 270     // Start rotated -90 degrees
-      },
-      { 
-        y: 0, 
-        x:0,          // Move to normal position
-        opacity: 0.5,     // Rotate to 0 degrees (normal)
-        duration: 1.5,  // Animation duration
-        delay: 1,       // Delay before animation starts
-        ease: "power2.out"
-      }
-    );
+    // gsap.fromTo(
+    //   ".imgWrapper",
+    //   { 
+    //     y: 0,  
+    //     x:0,// Start off-screen (bottom)
+    //     opacity: 0,     // Start fully hidden
+    //     // rotate: 270     // Start rotated -90 degrees
+    //   },
+    //   { 
+    //     y: 0, 
+    //     x:0,          // Move to normal position
+    //     opacity: 0.5,     // Rotate to 0 degrees (normal)
+    //     duration: 1.5,  // Animation duration
+    //     delay: 1,       // Delay before animation starts
+    //     ease: "power2.out"
+    //   }
+    // );
     gsap.fromTo(
       ".login-container .inner",
       { 

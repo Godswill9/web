@@ -345,7 +345,7 @@ useEffect(() => {
       await replyMessage(`${inputMessage}`); // Send the message
       await fetchMessages(data.users.id); // Fetch the messages after the reply
       await sendMail(inputMessage, data.users.username);
-      await sendWhatsappMessage(inputMessage, data.users.username, "messageText");
+      // await sendWhatsappMessage(inputMessage, data.users.username, "messageText");
     } catch (error) {
       console.error('Error during sending or fetching messages:', error);
     } finally {
@@ -446,6 +446,9 @@ useEffect(() => {
       handleSendMessage();
     }
   };
+
+
+  
 
   // const fetchMessages = async (id) => {
   //   try {
@@ -616,28 +619,43 @@ useEffect(() => {
       <div className="container">
       <LoadingIndicator isLoading={isLoading} />
         <div className="innerCont" ref={innerContRef}>
-          {messages.map((msg, index) => {
-            const isError = msg.elem.includes("An error occurred");
-            const messageClass = isError ? 'errorMessage' : msg.role;
-                if(msg.elem.startsWith("https:")){
-                  return (
-                    // <div key={index} className={messageClass}>
-                    <div key={index} className={messageClass}>
-                        <div className={`${messageClass}Inner`}>
-                           <img src={msg.elem} alt="" onClick={()=>fetchImg(msg.elem)}/> 
-                       </div>
-                    </div>
-                  );
-                }
-            return (
-              <div key={index} className={messageClass}>
-                <div 
-                  className={`${messageClass}Inner`} 
-                  dangerouslySetInnerHTML={{ __html: msg.elem }} 
-                />
-              </div>
-            );
-          })}
+       {messages.length === 0 ? (
+   <div
+    style={{
+      textAlign: 'center',
+      color: '#888',
+      padding: '20px',
+      fontSize: '16px'
+    }}
+  >
+    No messages yet. Send a message to get started!
+  </div>
+) : (
+  messages.map((msg, index) => {
+    const isError = msg.elem.includes("An error occurred");
+    const messageClass = isError ? 'errorMessage' : msg.role;
+
+    if (msg.elem.startsWith("https:")) {
+      return (
+        <div key={index} className={messageClass}>
+          <div className={`${messageClass}Inner`}>
+            <img src={msg.elem} alt="" onClick={() => fetchImg(msg.elem)} />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={index} className={messageClass}>
+        <div 
+          className={`${messageClass}Inner`} 
+          dangerouslySetInnerHTML={{ __html: msg.elem }} 
+        />
+      </div>
+    );
+  })
+)}
+
          {showAnimatedMessage? <AnimatedMessage role={'sender'} />: ""}
          <div
         className="image-preview sender"
@@ -681,7 +699,7 @@ useEffect(() => {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-<i class="bi bi-paperclip"  onClick={handleButtonClick}></i>
+<i className="bi bi-paperclip"  onClick={handleButtonClick}></i>
           <button onClick={handleSendMessage} disabled={!inputMessage.trim()}>
             Send
           </button>

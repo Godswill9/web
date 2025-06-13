@@ -1,11 +1,15 @@
 // Header.js
 import React, { useEffect, useState } from 'react';
 import '../stylings/styles.css'; // Import your SCSS file
+import { useNavigate } from 'react-router-dom';
+
 
 const Header = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const [unreadMessages, setUnreadMessages]= useState(0)
+ const navigate = useNavigate();
+
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -22,7 +26,7 @@ const Header = () => {
      
       if (!usersData || (usersData && usersData.message === "Please log in again.")) {
        navigate("/login")
-        setData(null); // Clear data if not logged in
+        // setData(null); // Clear data if not logged in
         return;
       } else{
       // setData({ users: usersData });
